@@ -11,5 +11,6 @@ namespace AutomobiliuPardavimoPrograma.Services
 
         // Tavo DB lentelės (modeliai)
         public DbSet<Automobilis> Automobiliai { get; set; }
+        public DbSet<Vartotojas> Vartotojai { get; set; }
     }
 }

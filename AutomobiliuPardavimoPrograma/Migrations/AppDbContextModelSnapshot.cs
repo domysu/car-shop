@@ -32,15 +32,63 @@ namespace AutomobiliuPardavimoPrograma.Migrations
                     b.Property<decimal>("Kaina")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<string>("Marke")
+                    b.Property<string>("KuroTipas")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Modelis")
+                    b.Property<string>("Marke")
+                        .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("Metai")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Modelis")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nuotrauka")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PavaruDeze")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Rida")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Automobiliai");
+                });
+
+            modelBuilder.Entity("AutomobiliuPardavimoPrograma.Models.Vartotojas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ElPastas")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SlaptazodisHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Vardas")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("YraAdmin")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vartotojai");
                 });
 #pragma warning restore 612, 618
         }

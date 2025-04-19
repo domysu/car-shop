@@ -1,12 +1,13 @@
-﻿@page "/weather"
+﻿@page "/cars"
 @attribute [StreamRendering]
 @using AutomobiliuPardavimoPrograma.Services
 @using AutomobiliuPardavimoPrograma.Models
 @using Microsoft.EntityFrameworkCore
 @inject AppDbContext Db
-<PageTitle>Weather</PageTitle>
+@inject CarService CarService
+<PageTitle>cars</PageTitle>
 
-<h1>Weather</h1>
+<h1 class="bg-slate-200 rounded-md text-center">CARS</h1>
 
 <p>This component demonstrates showing data.</p>
 
@@ -36,7 +37,7 @@ else
                     <td>@auto.Id</td>
                     <td>@auto.Marke</td>
                     <td>@auto.Modelis</td>
-                    <td>@auto.Kaina</td>
+                    <td>@auto.Kaina.ToString("F2")</td>
                 </tr>
             }
         </tbody>
@@ -48,6 +49,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        automobiliai = await Db.Automobiliai.ToListAsync();
+        automobiliai = await CarService.GautiVisusAsync();
     }
 }
