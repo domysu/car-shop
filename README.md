@@ -1,6 +1,6 @@
-# 🚗 Car Sales Management System
+# 🚗 Car sale project
 
-A modern web-based car sales application built with **Blazor Server**, **Entity Framework Core**, and **Tailwind CSS**.
+A web-based car sale project for school project
 
 ---
 
