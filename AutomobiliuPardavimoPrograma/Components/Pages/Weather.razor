@@ -1,0 +1,53 @@
+﻿@page "/weather"
+@attribute [StreamRendering]
+@using AutomobiliuPardavimoPrograma.Services
+@using AutomobiliuPardavimoPrograma.Models
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext Db
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (automobiliai == null)
+{
+    <p>Kraunama...</p>
+}
+else if (!automobiliai.Any())
+{
+    <p>Duomenų nėra.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Markė</th>
+                <th>Modelis</th>
+                <th>Kaina (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var auto in automobiliai)
+            {
+                <tr>
+                    <td>@auto.Id</td>
+                    <td>@auto.Marke</td>
+                    <td>@auto.Modelis</td>
+                    <td>@auto.Kaina</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Automobilis>? automobiliai;
+
+    protected override async Task OnInitializedAsync()
+    {
+        automobiliai = await Db.Automobiliai.ToListAsync();
+    }
+}
