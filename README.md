@@ -1,10 +1,10 @@
-# 🚗 Car sale project
+# Car sale project
 
 A web-based car sale project for school project
 
 ---
 
-## 📦 Technologies Used
+## Technologies Used
 
 - [.NET 8](https://dotnet.microsoft.com/)
 - Blazor Server
@@ -15,17 +15,17 @@ A web-based car sale project for school project
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 These instructions will get your local development environment up and running.
 
-### 📁 1. Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/domysu/car-shop.git
 ```
 
-### 🔧 2. Install dependencies (for Tailwind CSS)
+###  2. Install dependencies (for Tailwind CSS)
 
 Make sure you have [Node.js](https://nodejs.org/) installed.
 
@@ -35,9 +35,9 @@ npm install
 
 ---
 
-## 🎨 Tailwind CSS
+## Tailwind CSS
 
-### ⏱️ Watch for changes (during development)
+### ⏱Watch for changes (during development)
 
 This command generates `site.css` from your custom Tailwind styles:
 
@@ -47,7 +47,7 @@ npx tailwindcss -i ./wwwroot/css/input.css -o ./wwwroot/css/site.css --watch
 
 ---
 
-## 💾 Database Setup
+##  Database Setup
 
 Make sure you have database available (MySQL or SQLite).  
 Update the connection string in `Program.cs` accordingly.
@@ -59,6 +59,25 @@ options.UseMySql(
   "server=localhost;port=3306;database=automobiliai;user=root;password=yourpassword",
   ServerVersion.AutoDetect(...)
 );
+```
+or in `appsettings.json` add this
+```csharp
+
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;port=3306;database=blazor_db;user=admin;password=slaptas"
+
+  }
+```
+then in Program.cs
+```csharp
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
 ```
 
 ### Using SQLite (quick start):
