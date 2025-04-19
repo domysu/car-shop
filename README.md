@@ -56,7 +56,7 @@ Update the connection string in `Program.cs` accordingly.
 
 ```csharp
 options.UseMySql(
-  "server=localhost;port=3306;database=automobiliai;user=root;password=yourpassword",
+  "server=localhost;port=3306;database=dbname;user=root;password=yourpassword",
   ServerVersion.AutoDetect(...)
 );
 ```
@@ -64,7 +64,7 @@ or in `appsettings.json` add this
 ```csharp
 
   "ConnectionStrings": {
-    "DefaultConnection": "server=localhost;port=3306;database=blazor_db;user=admin;password=slaptas"
+    "DefaultConnection": "server=localhost;port=3306;database=dbname;user=username;password=password"
 
   }
 ```
