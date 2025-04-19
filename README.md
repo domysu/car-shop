@@ -94,7 +94,7 @@ dotnet ef database update
 
 ---
 
-## ▶️ Run the application
+##  Run the application
 
 ```bash
 dotnet run
@@ -103,7 +103,7 @@ dotnet run
 
 
 
-## 🛡️ .gitignore Tips
+## .gitignore Tips
 
 Make sure the following are ignored:
 
@@ -118,12 +118,12 @@ wwwroot/css/site.css
 
 ---
 
-## 📄 License
+## License
 
 MIT
 
 ---
 
-## 🧙 Final Note
+##  Final Note
 
-Built with 💻 and ☕ by Dominykas @ Klaipėda University.
+Built with 💻 and ☕ 
