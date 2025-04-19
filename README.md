@@ -68,7 +68,7 @@ or in `appsettings.json` add this
 
   }
 ```
-then in Program.cs
+then in `Program.cs`
 ```csharp
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
