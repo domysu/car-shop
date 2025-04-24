@@ -15,6 +15,7 @@ builder.Services.AddRazorComponents()
     ));
 
 builder.Services.AddScoped<CarService>();
+builder.Services.AddScoped<UserService>();
 
 
 var app = builder.Build();
