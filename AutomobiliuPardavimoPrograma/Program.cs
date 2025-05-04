@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
 using Microsoft.AspNetCore.Components.Authorization;
+using Blazorise;
+using Blazorise.Tailwind;
+using Blazorise.Icons.FontAwesome;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +34,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 
-
+builder.Services
+    .AddBlazorise()
+    .AddTailwindProviders()
+    .AddFontAwesomeIcons();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();

@@ -1,0 +1,151 @@
+@using AutomobiliuPardavimoPrograma.Models
+@using Microsoft.AspNetCore.Components.Forms
+@rendermode InteractiveServer
+
+<Modal class="" @ref="modalRef">
+  <ModalContent Size="ModalSize.Fullscreen" Class="h-max">
+    
+    <ModalHeader class="ml-5">
+      <ModalTitle>Employee edit</ModalTitle>
+      <CloseButton />
+    </ModalHeader>
+    
+    <EditForm Model="AutomobilioModel"
+              OnValidSubmit="HandleSubmit"
+              OnInvalidSubmit="HandleInvalidSubmit"
+              class="grid grid-cols-3 gap-3 ml-10">
+      
+      <DataAnnotationsValidator />
+
+      
+      <!-- Column 1 -->
+      <div class="col-span-1">
+        <Field Class="mt-9">
+          <FieldLabel>Automobilio markė *</FieldLabel>
+          <InputText @bind-Value="AutomobilioModel.Marke"
+                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+                    Placeholder="Įveskite markę" />
+       
+        </Field>
+        
+        <Field>
+          <FieldLabel>Automobilio modelis *</FieldLabel>
+          <InputText @bind-Value="AutomobilioModel.Modelis"
+                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+                    Placeholder="Įveskite modelį" />
+      
+        </Field>
+        
+        <Field>
+          <FieldLabel>Automobilio gaminimo metai *</FieldLabel>
+          <InputNumber @bind-Value="AutomobilioModel.Metai"
+                    class="max-w-xs  text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+                    Placeholder="Įveskite gaminimo metus" />
+        
+        </Field>
+        
+        <Field>
+          <FieldLabel>Automobilio kaina (€) *</FieldLabel>
+          <InputNumber @bind-Value="AutomobilioModel.Kaina"
+                    class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+                    Placeholder="Įveskite kainą" />
+      
+        </Field>
+      </div>
+      
+      <!-- Column 2 -->
+      <div class="col-span-1">
+        <Field>
+          <FieldLabel>Automobilio rida (km) *</FieldLabel>
+          <InputNumber @bind-Value="AutomobilioModel.Rida"
+                    class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+                    Placeholder="Įveskite ridą" />
+        </Field>
+       
+        
+        <Field>
+          <FieldLabel>Automobilio kuro tipas *</FieldLabel>
+          <InputText @bind-Value="AutomobilioModel.KuroTipas"
+                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+                    Placeholder="Įveskite kuro tipa" />
+         
+        </Field>
+        <Field>
+          <FieldLabel>Automobilio pavarų dėžė *</FieldLabel>
+          <InputText @bind-Value="AutomobilioModel.PavaruDeze"
+                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+                    Placeholder="Įveskite pavarų dėžę" />
+        </Field>
+        
+        <Field>
+          <FieldLabel>Aprašymas</FieldLabel>
+          <InputTextArea @bind-Value="AutomobilioModel.Aprasymas"
+                    class="max-w-s text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"/>
+                    
+       
+     
+        </Field>
+      </div>
+      
+      <!-- Column 3: image + file -->
+      <Field Class="col-span-1 w-full h-80 rounded-md">
+        <img src="https://picsum.photos/600/400"
+             alt=""
+             class="object-cover w-full h-full rounded-md" />
+        <button class="relative bg-amber-300 px-3 py-2 mt-3">
+          Input file
+          <InputFile class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
+                     OnChange="OnFileChanged" />
+        </button>
+      </Field>
+        <p class="col-span-3 text-sm text-blue-600">
+        @SubmitStatus
+        </p>
+      
+      <!-- Footer -->
+      <ModalFooter class="col-span-3">
+        <Button Color="Color.Secondary"
+                Clicked="@HideModal">
+          Close
+        </Button>
+        <button type="submit" class="col-start-3 ml-2 px-4 py-2 bg-green-500 text-white rounded">
+      Save (native)
+    </button>
+      </ModalFooter>
+      
+    </EditForm>
+    
+  </ModalContent>
+</Modal>
+
+@code {
+    private string SubmitStatus = "Not yet submitted!";
+  private Modal modalRef;
+
+  private AutomobilioModel AutomobilioModel {get;set;}= new();
+
+  public Task ShowModal()
+  {
+    
+    return modalRef.Show();
+  }
+
+  public Task HideModal() => modalRef.Hide();
+
+  private async Task HandleSubmit()
+  {
+    SubmitStatus = "✅Valid submit fired!";
+   
+  }
+
+  private void HandleInvalidSubmit(EditContext _) 
+  {
+    SubmitStatus = "⚠️Invalid submit—check validation messages.";
+    Console.WriteLine(AutomobilioModel.Kaina);
+  }
+
+  private void OnFileChanged(InputFileChangeEventArgs e)
+  {
+    // handle file upload…
+  }
+}

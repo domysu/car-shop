@@ -1,8 +1,10 @@
 ﻿@page "/cars"
-@attribute [StreamRendering]
+
 @using AutomobiliuPardavimoPrograma.Services
 @using AutomobiliuPardavimoPrograma.Models
 @using Microsoft.EntityFrameworkCore
+@using AutomobiliuPardavimoPrograma.Components
+@rendermode InteractiveServer
 @inject AppDbContext Db
 @inject CarService CarService
 
@@ -10,7 +12,12 @@
 
 <h1 class="rounded-md text-center">CARS</h1>
 
-<p>This component demonstrates showing data.</p>
+
+<div class="mb-2 text-white">
+
+    <button class="bg-amber-500 p-2 rounded-md" @onclick="() => modalRef.ShowModal()"> Add car listing</button>
+    <AddCarModal @ref="modalRef"></AddCarModal>
+</div>
 
 @if (automobiliai == null)
 {
@@ -22,30 +29,14 @@ else if (!automobiliai.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Markė</th>
-                <th>Modelis</th>
-                <th>Kaina (€)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var auto in automobiliai)
-            {
-                <tr>
-                    <td>@auto.Id</td>
-                    <td>@auto.Marke</td>
-                    <td>@auto.Modelis</td>
-                    <td>@auto.Kaina.ToString("F2")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@foreach(var cars in automobiliai)
+{
+    <CarItem  Car="cars"></CarItem>
+}
 }
 
 @code {
+    private AddCarModal modalRef;
     private List<Automobilis>? automobiliai;
 
     protected override async Task OnInitializedAsync()

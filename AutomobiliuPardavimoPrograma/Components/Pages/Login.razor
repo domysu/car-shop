@@ -1,10 +1,12 @@
 @page "/login"
 @using AutomobiliuPardavimoPrograma.Models;
 @using AutomobiliuPardavimoPrograma.Services;
-@using AutomobiliuPardavimoPrograma.Controllers;
+
 @using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
+@inject AuthenticationStateProvider AuthProvider
 @inject AppDbContext db
 @inject UserService UserService
 @inject NavigationManager Navigation
@@ -37,7 +39,7 @@
 
     <EditForm Model="LoginModel" OnValidSubmit="LogIn" FormName="LoginForm">
       <DataAnnotationsValidator />
-      <ValidationSummary />
+      
 
 
 
@@ -88,6 +90,18 @@
   private string successMessage = "";
   private bool showErrorMessage = false;
   private bool showSuccessMessage = false;
+
+    protected override async Task OnInitializedAsync()
+  {
+    var authState = await AuthProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    if(user.Identity != null && user.Identity.IsAuthenticated)
+    {
+      Navigation.NavigateTo("/cars");
+    }
+
+  }
 
   private async Task LogIn()
   {

@@ -11,6 +11,7 @@ namespace AutomobiliuPardavimoPrograma.Models
     public string PavaruDeze { get; set; }     // Automat / Mechanine
     public string KuroTipas { get; set; }      // Benzinas, Dyzelis...
     public string Nuotrauka { get; set; }      // URL į paveikslėlį
+    public string Aprasymas {get;set;}
 }
 
 }
