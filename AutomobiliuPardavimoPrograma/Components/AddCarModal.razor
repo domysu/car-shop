@@ -1,16 +1,19 @@
 @using AutomobiliuPardavimoPrograma.Models
 @using Microsoft.AspNetCore.Components.Forms
+@using AutomobiliuPardavimoPrograma.Services
+@inject CarService CarService
 @rendermode InteractiveServer
+@inject IWebHostEnvironment _env
 
 <Modal class="" @ref="modalRef">
   <ModalContent Size="ModalSize.Fullscreen" Class="h-max">
     
     <ModalHeader class="ml-5">
-      <ModalTitle>Employee edit</ModalTitle>
+      <ModalTitle>Pridėti skelbimą</ModalTitle>
       <CloseButton />
     </ModalHeader>
     
-    <EditForm Model="AutomobilioModel"
+    <EditForm Model="NaujasAutomobilis"
               OnValidSubmit="HandleSubmit"
               OnInvalidSubmit="HandleInvalidSubmit"
               class="grid grid-cols-3 gap-3 ml-10">
@@ -20,9 +23,9 @@
       
       <!-- Column 1 -->
       <div class="col-span-1">
-        <Field Class="mt-9">
+        <Field Class="">
           <FieldLabel>Automobilio markė *</FieldLabel>
-          <InputText @bind-Value="AutomobilioModel.Marke"
+          <InputText @bind-Value="NaujasAutomobilis.Marke"
                     class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
                     Placeholder="Įveskite markę" />
        
@@ -30,7 +33,7 @@
         
         <Field>
           <FieldLabel>Automobilio modelis *</FieldLabel>
-          <InputText @bind-Value="AutomobilioModel.Modelis"
+          <InputText @bind-Value="NaujasAutomobilis.Modelis"
                     class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
                     Placeholder="Įveskite modelį" />
       
@@ -38,7 +41,7 @@
         
         <Field>
           <FieldLabel>Automobilio gaminimo metai *</FieldLabel>
-          <InputNumber @bind-Value="AutomobilioModel.Metai"
+          <InputNumber min="1885" max="2027" @bind-Value="NaujasAutomobilis.Metai"
                     class="max-w-xs  text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
                     Placeholder="Įveskite gaminimo metus" />
         
@@ -46,7 +49,7 @@
         
         <Field>
           <FieldLabel>Automobilio kaina (€) *</FieldLabel>
-          <InputNumber @bind-Value="AutomobilioModel.Kaina"
+          <InputNumber min="0" @bind-Value="NaujasAutomobilis.Kaina"
                     class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
                     Placeholder="Įveskite kainą" />
       
@@ -57,7 +60,7 @@
       <div class="col-span-1">
         <Field>
           <FieldLabel>Automobilio rida (km) *</FieldLabel>
-          <InputNumber @bind-Value="AutomobilioModel.Rida"
+          <InputNumber min="0" max="3000000" @bind-Value="NaujasAutomobilis.Rida"
                     class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
                     Placeholder="Įveskite ridą" />
         </Field>
@@ -65,37 +68,46 @@
         
         <Field>
           <FieldLabel>Automobilio kuro tipas *</FieldLabel>
-          <InputText @bind-Value="AutomobilioModel.KuroTipas"
-                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
-                    Placeholder="Įveskite kuro tipa" />
+         <InputSelect class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1" @bind-Value="NaujasAutomobilis.KuroTipas">
+                <option value="Benzinas">Benzinas</option>
+                <option value="Dyzelis">Dyzelis</option>
+                <option value="Elektra">Elektra</option>
+                <option value="Hybridas">Hybridas</option>
+            </InputSelect>
          
         </Field>
         <Field>
           <FieldLabel>Automobilio pavarų dėžė *</FieldLabel>
-          <InputText @bind-Value="AutomobilioModel.PavaruDeze"
-                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
-                    Placeholder="Įveskite pavarų dėžę" />
+          <InputSelect class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1" @bind-Value="NaujasAutomobilis.PavaruDeze">
+                <option value="Mechanine">Mechanine</option>
+                <option value="Automatine">Automatine</option>
+            </InputSelect>
         </Field>
         
         <Field>
           <FieldLabel>Aprašymas</FieldLabel>
-          <InputTextArea @bind-Value="AutomobilioModel.Aprasymas"
-                    class="max-w-s text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"/>
-                    
-       
-     
+          <InputTextArea @bind-Value="NaujasAutomobilis.Aprasymas"
+                    class="max-w-xs w-full text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"/>
+
         </Field>
+     
+        
       </div>
       
       <!-- Column 3: image + file -->
       <Field Class="col-span-1 w-full h-80 rounded-md">
-        <img src="https://picsum.photos/600/400"
-             alt=""
-             class="object-cover w-full h-full rounded-md" />
+        @if (previews?.Any() == true)
+    {
+    
+      @foreach (var src in previews)
+      {
+        <img src="@src" class="object-cover w-full h-40 rounded-md" />
+      }
+      }
         <button class="relative bg-amber-300 px-3 py-2 mt-3">
-          Input file
-          <InputFile class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
-                     OnChange="OnFileChanged" />
+          Pridėti nuotraukas
+          <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
+                     OnChange="OnFilesChanged" />
         </button>
       </Field>
         <p class="col-span-3 text-sm text-blue-600">
@@ -120,9 +132,10 @@
 
 @code {
     private string SubmitStatus = "Not yet submitted!";
+    private List<string> previews = new();
   private Modal modalRef;
 
-  private AutomobilioModel AutomobilioModel {get;set;}= new();
+  private Automobilis NaujasAutomobilis = new Automobilis();
 
   public Task ShowModal()
   {
@@ -134,18 +147,53 @@
 
   private async Task HandleSubmit()
   {
-    SubmitStatus = "✅Valid submit fired!";
+    await CarService.PridetiAsync(NaujasAutomobilis);
+    SubmitStatus = "Item Added!";
    
   }
 
   private void HandleInvalidSubmit(EditContext _) 
   {
-    SubmitStatus = "⚠️Invalid submit—check validation messages.";
-    Console.WriteLine(AutomobilioModel.Kaina);
+    SubmitStatus = "Something went wrong!";
+     Console.WriteLine(NaujasAutomobilis.Aprasymas);
+      Console.WriteLine(NaujasAutomobilis.Nuotraukos[0]);
+   
   }
 
-  private void OnFileChanged(InputFileChangeEventArgs e)
+   private async Task OnFilesChanged(InputFileChangeEventArgs e)
   {
-    // handle file upload…
+    // clear old
+    previews.Clear();
+    
+
+    // ensure folder
+    var uploads = Path.Combine(_env.WebRootPath, "uploads");
+    Directory.CreateDirectory(uploads);
+
+    // limit per file, e.g. 2 MB
+    var maxBytes = 2 * 1024 * 1024;
+    
+
+    foreach (var file in e.GetMultipleFiles())
+    {
+      // generate unique name
+      var fileName = $"{Guid.NewGuid()}_{file.Name}";
+      var filePath = Path.Combine(uploads, fileName);
+
+      // read & save
+      await using var stream = file.OpenReadStream(maxBytes);
+      Console.WriteLine(stream);
+      using var ms = new MemoryStream();
+      await stream.CopyToAsync(ms);
+      await File.WriteAllBytesAsync(filePath, ms.ToArray());
+     
+      // build preview URL + model binding
+      var previewUrl = $"data:{file.ContentType};base64,"
+                       + Convert.ToBase64String(ms.ToArray());
+      previews.Add(previewUrl);
+       StateHasChanged();
+      // store relative URL for later display / database
+      NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
+    }
   }
 }

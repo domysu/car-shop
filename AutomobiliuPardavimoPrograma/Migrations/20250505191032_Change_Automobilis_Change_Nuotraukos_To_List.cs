@@ -5,7 +5,7 @@
 namespace AutomobiliuPardavimoPrograma.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Aprasymas_To_Automobilis : Migration
+    public partial class Change_Automobilis_Change_Nuotraukos_To_List : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,7 +14,7 @@ namespace AutomobiliuPardavimoPrograma.Migrations
                 name: "Aprasymas",
                 table: "Automobiliai",
                 type: "longtext",
-                nullable: false)
+                nullable: true)
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
 

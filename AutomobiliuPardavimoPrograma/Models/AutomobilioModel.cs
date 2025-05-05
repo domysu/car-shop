@@ -20,10 +20,10 @@ public class AutomobilioModel
   public decimal? Kaina { get; set; }
 
   [Required(ErrorMessage = "Pavarų dėžė privaloma")]
-  public string? PavaruDeze { get; set; }
+  public string PavaruDeze { get; set; }
 
   [Required(ErrorMessage = "Kuro tipas privalomas")]
-  public string? KuroTipas { get; set; }
+  public string KuroTipas { get; set; }
 
   public string? Nuotrauka { get; set; }
 

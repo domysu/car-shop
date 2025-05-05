@@ -2,13 +2,13 @@
 
 
 <div class="hover:border-1 hover:border-amber-200 cursor-pointer bg-white border border-gray-200 rounded-md shadow-md overflow-hidden flex mb-4 h-64">
-    <img src="https://picsum.photos/500/500" alt="@Car.Marke @Car.Modelis" class="w-86 object-cover" />
+    <img src="@Car.Nuotraukos[0]" alt="@Car.Marke @Car.Modelis" class="w-86 max-w-[300px] object-cover" />
 
-    <div class="p-4 flex-1">
+    <div class="px-7 py-5 flex-1 ">
         <h2 class="text-xl font-bold text-gray-800">@Car.Marke @Car.Modelis (@Car.Metai)</h2>
         <p class="text-sm text-gray-600 mt-1">@Car.Aprasymas</p>
 
-        <div class="mt-3 text-sm text-gray-700 space-y-1">
+        <div class="mt-3 text-sm text-gray-700 space-y-3">
             <p><strong>Kaina:</strong> @Car.Kaina.ToString("F0") €</p>
             <p><strong>Rida:</strong> @Car.Rida km</p>
             <p><strong>Kuras:</strong> @Car.KuroTipas</p>
@@ -19,5 +19,5 @@
 
 @code {
     [Parameter]
-    public Automobilis Car { get; set; } = default!;
+    public Automobilis Car { get; set; }
 }

@@ -1,46 +1,138 @@
 ﻿@page "/cars"
-
-@using AutomobiliuPardavimoPrograma.Services
 @using AutomobiliuPardavimoPrograma.Models
-@using Microsoft.EntityFrameworkCore
-@using AutomobiliuPardavimoPrograma.Components
 @rendermode InteractiveServer
-@inject AppDbContext Db
+@using AutomobiliuPardavimoPrograma.Services
 @inject CarService CarService
 
 <PageTitle>Cars</PageTitle>
 
-<h1 class="rounded-md text-center">CARS</h1>
+<div class="mb-4 p-4 bg-gray-100 rounded flex gap-4 items-end">
+  <!-- Marke filter -->
+  <div>
+    <label>Marke:</label>
+    <InputText @bind-Value="filterMarke"
+               placeholder="Įveskite Marke"
+               class="border px-2 py-1 rounded"
+    />
+  </div>
 
+  <!-- Price range -->
+  <div>
+    <label>Kaina € nuo:</label>
+    <InputNumber @bind-Value="filterMinPrice"
+                 class="border px-2 py-1 rounded w-24"/>
+  </div>
+  <div>
+    <label>iki:</label>
+    <InputNumber @bind-Value="filterMaxPrice"
+                 class="border px-2 py-1 rounded w-24"/>
+  </div>
 
-<div class="mb-2 text-white">
+  <!-- Gearbox -->
+  <div>
+    <label>Pavarų dėžė:</label>
+    <InputSelect @bind-Value="filterPavaruDeze"
+                 class="border px-2 py-1 rounded">
+      <option value="">Visos</option>
+      <option value="Mechanine">Mechaninė</option>
+      <option value="Automatine">Automatinė</option>
+    </InputSelect>
+  </div>
 
-    <button class="bg-amber-500 p-2 rounded-md" @onclick="() => modalRef.ShowModal()"> Add car listing</button>
-    <AddCarModal @ref="modalRef"></AddCarModal>
+  <!-- Fuel type -->
+  <div>
+    <label>Kuras:</label>
+    <InputSelect @bind-Value="filterKuroTipas"
+                 class="border px-2 py-1 rounded">
+      <option value="">Visi</option>
+      <option value="Benzinas">Benzinas</option>
+      <option value="Dyzelis">Dyzelis</option>
+      <option value="Elektra">Elektra</option>
+      <option value="Hybridas">Hybridas</option>
+    </InputSelect>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex gap-2">
+    <button class="bg-blue-500 text-white px-3 py-1 rounded"
+            @onclick="ApplyFilters">
+      Filtruoti
+    </button>
+    <button class="bg-gray-300 px-3 py-1 rounded"
+            @onclick="ResetFilters">
+      Išvalyti
+    </button>
+  </div>
 </div>
 
-@if (automobiliai == null)
+@if (filteredAutomobiliai == null)
 {
-    <p>Kraunama...</p>
+  <p>Kraunama...</p>
 }
-else if (!automobiliai.Any())
+else if (!filteredAutomobiliai.Any())
 {
-    <p>Duomenų nėra.</p>
+  <p>Nieko nerasta pagal nurodytus kriterijus.</p>
 }
 else
 {
-@foreach(var cars in automobiliai)
-{
-    <CarItem  Car="cars"></CarItem>
-}
+  <div class="gap-4">
+    @foreach (var car in filteredAutomobiliai)
+    {
+      <CarItem Car="car" />
+    }
+  </div>
 }
 
 @code {
-    private AddCarModal modalRef;
-    private List<Automobilis>? automobiliai;
+  private List<Automobilis> automobiliai;
+  private List<Automobilis> filteredAutomobiliai;
 
-    protected override async Task OnInitializedAsync()
-    {
-        automobiliai = await CarService.GautiVisusAsync();
-    }
+  // filter fields
+  private string filterMarke = "";
+  private decimal? filterMinPrice;
+  private decimal? filterMaxPrice;
+  private string filterPavaruDeze = "";
+  private string filterKuroTipas = "";
+
+  protected override async Task OnInitializedAsync()
+  {
+    automobiliai = await CarService.GautiVisusAsync();
+    filteredAutomobiliai = automobiliai;
+  }
+
+  private void ApplyFilters()
+  {
+    if (automobiliai is null) return;
+
+    var query = automobiliai.AsEnumerable();
+
+    if (!string.IsNullOrWhiteSpace(filterMarke))
+      query = query.Where(a =>
+        a.Marke?.Contains(filterMarke, StringComparison.OrdinalIgnoreCase) ?? false);
+
+    if (filterMinPrice.HasValue)
+      query = query.Where(a => a.Kaina >= filterMinPrice.Value);
+
+    if (filterMaxPrice.HasValue)
+      query = query.Where(a => a.Kaina <= filterMaxPrice.Value);
+
+    if (!string.IsNullOrEmpty(filterPavaruDeze))
+      query = query.Where(a => a.PavaruDeze == filterPavaruDeze);
+
+    if (!string.IsNullOrEmpty(filterKuroTipas))
+      query = query.Where(a => a.KuroTipas == filterKuroTipas);
+
+    filteredAutomobiliai = query.ToList();
+    StateHasChanged();
+  }
+
+  private void ResetFilters()
+  {
+    filterMarke = "";
+    filterMinPrice = null;
+    filterMaxPrice = null;
+    filterPavaruDeze = "";
+    filterKuroTipas = "";
+    filteredAutomobiliai = automobiliai;
+  }
 }

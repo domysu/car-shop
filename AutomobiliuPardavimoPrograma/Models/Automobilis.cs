@@ -1,17 +1,37 @@
+using System.ComponentModel.DataAnnotations;
 namespace AutomobiliuPardavimoPrograma.Models
 {
- public class Automobilis
+public class Automobilis
 {
-    public int Id { get; set; }
-    public string Marke { get; set; }          // BMW, Audi...
-    public string Modelis { get; set; }        // A6, X5...
-    public int Metai { get; set; }             // 2015
-    public int Rida { get; set; }              // km
-    public decimal Kaina { get; set; }         // €
-    public string PavaruDeze { get; set; }     // Automat / Mechanine
-    public string KuroTipas { get; set; }      // Benzinas, Dyzelis...
-    public string Nuotrauka { get; set; }      // URL į paveikslėlį
-    public string Aprasymas {get;set;}
+
+    public int Id {get;set;}
+
+  [Required(ErrorMessage = "Markė privaloma")]
+  public string? Marke { get; set; }
+
+  [Required(ErrorMessage = "Modelis privalomas")]
+  public string? Modelis { get; set; }
+
+  [Required(ErrorMessage = "Metai privalomi")]
+  public int? Metai { get; set; }
+
+  [Required(ErrorMessage = "Rida privaloma")]
+  public int? Rida { get; set; }
+
+  [Required(ErrorMessage = "Kaina privaloma")]
+  public decimal Kaina { get; set; }
+
+  [Required(ErrorMessage = "Pavarų dėžė privaloma")]
+  public string PavaruDeze { get; set; }
+
+  [Required(ErrorMessage = "Kuro tipas privalomas")]
+  public string KuroTipas { get; set; }
+    [Required(ErrorMessage = "Mašinos nuotrauka yra privaloma")]
+  public List<string> Nuotraukos { get; set; } = new();
+
+  public string? Aprasymas {get;set;}
+
 }
+
 
 }
