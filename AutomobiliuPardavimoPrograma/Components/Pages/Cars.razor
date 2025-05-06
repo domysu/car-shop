@@ -1,6 +1,7 @@
 ﻿@page "/cars"
 @using AutomobiliuPardavimoPrograma.Models
 @rendermode InteractiveServer
+@using AutomobiliuPardavimoPrograma.Components
 @using AutomobiliuPardavimoPrograma.Services
 @inject CarService CarService
 
@@ -63,6 +64,13 @@
       Išvalyti
     </button>
   </div>
+</div>
+
+
+<div class="mb-2 text-white">
+
+    <button class="bg-amber-500 p-2 rounded-md" @onclick="() => modalRef.ShowModal()"> Add car listing</button>
+    <AddCarModal @ref="modalRef" />
 </div>
 
 @if (filteredAutomobiliai == null)
@@ -135,4 +143,9 @@ else
     filterKuroTipas = "";
     filteredAutomobiliai = automobiliai;
   }
+
+
+    private AddCarModal modalRef;
+
+   
 }
