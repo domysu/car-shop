@@ -28,8 +28,11 @@ public class Automobilis
   public string KuroTipas { get; set; }
     [Required(ErrorMessage = "Mašinos nuotrauka yra privaloma")]
   public List<string> Nuotraukos { get; set; } = new();
+  [Required]
+  public int CreatedById {get; set; }
 
   public string? Aprasymas {get;set;}
+  public ICollection<UserPostLikes> UserPostLikes { get; set; }
 
 }
 

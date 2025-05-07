@@ -43,6 +43,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserCarLikesService>();
 
 
 

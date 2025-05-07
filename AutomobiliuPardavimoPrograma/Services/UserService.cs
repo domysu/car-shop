@@ -23,6 +23,10 @@ namespace AutomobiliuPardavimoPrograma.Services
         {
             return await _db.Vartotojai.FindAsync(id);
         }
+        public async Task<Vartotojas?> GautiPagalUserNameAsync(string username)
+        {
+            return await _db.Vartotojai.FirstOrDefaultAsync(c => c.Vardas == username);
+        }
 
         public async Task<ServiceResult> PridetiAsync(Vartotojas auto)
         {

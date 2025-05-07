@@ -17,7 +17,7 @@ public class Vartotojas
 
     public string RawPassword{get; set;}
     public bool YraAdmin { get; set; }
-
-
-}
+    public ICollection<UserPostLikes> UserPostLikes { get; set; }
+        
+    }
 }

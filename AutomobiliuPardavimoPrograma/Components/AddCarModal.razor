@@ -133,9 +133,14 @@
 @code {
     private string SubmitStatus = "Not yet submitted!";
     private List<string> previews = new();
-  private Modal modalRef;
+    private Modal modalRef;
+    [Parameter]
+    public int CurrentUserId {get;set;}
 
-  private Automobilis NaujasAutomobilis = new Automobilis();
+  private Automobilis NaujasAutomobilis = new Automobilis{
+    KuroTipas = "Benzinas",
+    PavaruDeze = "Mechanine",
+  };
 
   public Task ShowModal()
   {
@@ -147,6 +152,7 @@
 
   private async Task HandleSubmit()
   {
+    NaujasAutomobilis.CreatedById = CurrentUserId;
     await CarService.PridetiAsync(NaujasAutomobilis);
     SubmitStatus = "Item Added!";
    
