@@ -37,7 +37,7 @@ npm install
 
 ## Tailwind CSS
 
-### ⏱Watch for changes (during development)
+### Watch for changes (during development)
 
 This command generates `site.css` from your custom Tailwind styles:
 
