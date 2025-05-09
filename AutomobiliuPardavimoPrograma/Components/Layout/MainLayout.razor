@@ -1,8 +1,10 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
+@using AutomobiliuPardavimoPrograma.Services
+@using AutomobiliuPardavimoPrograma.Components
 @inject AuthenticationStateProvider AuthStateProvider
-
 @inject NavigationManager Navigation
+@inject UserService UserService
 @using System.Security.Claims
 
 
@@ -15,8 +17,11 @@
             <AuthorizeView>
                 <Authorized>
                     <div class="absolute right-1 flex text-center">
-                    <span class="text-green-700 mr-2 p-2" > Labas, <b> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value</b></span>
-                    <a class="text-red-500 p-2" href="/logout">Atsijungti</a>
+                    <span class="text-green-700 p-2" > Labas, 
+                        <a href="@($"/user/{userId}")" class="hover:underline"><b> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value </b></a>
+                    </span>
+
+                    <a class="text-red-500 p-2 hover:underline" href="/logout">Atsijungti</a>
 
                     </div>
                     
@@ -41,6 +46,20 @@
 
 
 @code {
-  
+    private int userId = -1;
+     protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user      = authState.User;
+        if(!user.Identity.IsAuthenticated)return ;
+
+      
+        var userName = user.Identity.Name;
+        var currentUser = await UserService.GautiPagalUserNameAsync(userName);
+        userId = currentUser.Id;
+       
+
+       
+    }
 
 }

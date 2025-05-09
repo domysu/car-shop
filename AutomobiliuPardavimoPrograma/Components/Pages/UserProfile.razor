@@ -1,1 +1,86 @@
-@page "/user/{Id}"
+@page "/user/{Id:int}"
+@using AutomobiliuPardavimoPrograma.Services
+@using AutomobiliuPardavimoPrograma.Models
+@inject UserService UserService
+@inject CarService CarService
+@inject UserCarLikesService CarLikesService
+
+
+
+<div class="grid grid-cols-12">
+    <div class="col-start-4 col-span-6 rounded-md rounded-b-none bg-slate-100 p-2 h-full w-full mt-5 ">
+        <div class="p-2 font-serif">
+            <div>
+                <h1 class="text-black text-4xl font-bold">@currentUser?.Vardas</h1>
+                <h2 class="text-black">@currentUser?.ElPastas</h2>
+
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Navigation menu -->
+    <div class="col-start-4 col-span-6 bg-slate-50 border-t-2 border-slate-500 text-gray-700 h-[45px]">
+        <div class="p-2 align-middle" <!-- <button
+            class=" hover:text-black  border-b-2 border-spacing-0 border-gray-700 rounded-sm text-sm"> Išsaugotos
+            mašinos </button> -->
+
+
+            s
+        </div>
+        <!-- Saved car list -->
+        <div class="col-start-4 col-span-6 bg-slate-50 p-2">
+       @if (userLikedCarsList.Any())
+    {
+      <ul>
+        @foreach (var car in userLikedCarsList)
+        {
+          <li>@car.Marke</li>
+        }
+      </ul>
+    }
+    else
+    {
+      <p>User hasn’t liked any cars yet.</p>
+    }
+
+        </div>
+
+    </div>
+
+
+
+</div>
+@code{
+
+private Vartotojas? currentUser{get;set;}
+[Parameter]
+public int Id {get;set;}
+
+public List<Automobilis>? autoList = new();
+
+public List<UserPostLikes>? userLikesList = new();
+public List<Automobilis>? userLikedCarsList = new();
+
+protected override async Task OnInitializedAsync()
+{
+    userLikesList    = await CarLikesService.GautiVisusByIdAsync(Id);
+    autoList         = await CarService.GautiVisusAsync();
+    currentUser      = await UserService.GautiPagalIdAsync(Id);
+
+    // 2) Extract the liked-car IDs
+    var likedIds = userLikesList
+        .Select(like => like.PostId)
+        .ToHashSet();
+
+    // 3) Filter in-memory and use ToList()
+    userLikedCarsList = autoList
+        .Where(car => likedIds.Contains(car.Id))
+        .ToList();
+
+    
+
+
+
+}
+}

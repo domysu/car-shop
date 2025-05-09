@@ -1,4 +1,3 @@
-using AutomobiliuPardavimoPrograma.Services;
 using AutomobiliuPardavimoPrograma.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,45 +6,49 @@ namespace AutomobiliuPardavimoPrograma.Services
 {
     public class UserService
     {
-        private readonly AppDbContext _db;
+        private readonly IDbContextFactory<AppDbContext> _factory;  // ← semicolon
 
-        public UserService(AppDbContext db)
-        {
-            _db = db;
-        }
+        public UserService(IDbContextFactory<AppDbContext> factory)
+            => _factory = factory;
 
         public async Task<List<Vartotojas>> GautiVisusAsync()
         {
-            return await _db.Vartotojai.ToListAsync();
+            await using var db = _factory.CreateDbContext();
+            return await db.Vartotojai.ToListAsync();
         }
 
         public async Task<Vartotojas?> GautiPagalIdAsync(int id)
         {
-            return await _db.Vartotojai.FindAsync(id);
+            await using var db = _factory.CreateDbContext();
+            return await db.Vartotojai.FindAsync(id);
         }
+
         public async Task<Vartotojas?> GautiPagalUserNameAsync(string username)
         {
-            return await _db.Vartotojai.FirstOrDefaultAsync(c => c.Vardas == username);
+            await using var db = _factory.CreateDbContext();
+            return await db.Vartotojai
+                           .FirstOrDefaultAsync(c => c.Vardas == username);
         }
 
         public async Task<ServiceResult> PridetiAsync(Vartotojas auto)
         {
+            await using var db = _factory.CreateDbContext();
 
-            bool emailExists = await _db.Vartotojai.AnyAsync(c => c.ElPastas == auto.ElPastas);
+            bool emailExists = await db.Vartotojai
+                                       .AnyAsync(c => c.ElPastas == auto.ElPastas);
             if (emailExists)
-            {
-                return ServiceResult.Fail("Toks el.pastas jau egzistuoja.");
-            }
-            auto.YraAdmin = false;
+                return ServiceResult.Fail("Toks el.paštas jau egzistuoja.");
 
+            auto.YraAdmin = false;
 
             try
             {
-                _db.Vartotojai.Add(auto);
-                await _db.SaveChangesAsync();
+                db.Vartotojai.Add(auto);
+                await db.SaveChangesAsync();
                 return ServiceResult.Success();
             }
-            catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("Email jau egzistuoja") == true)
+            catch (DbUpdateException ex) when (
+                ex.InnerException?.Message.Contains("Email jau egzistuoja") == true)
             {
                 return ServiceResult.Fail("Toks el. paštas jau egzistuoja (trigger).");
             }
@@ -53,36 +56,45 @@ namespace AutomobiliuPardavimoPrograma.Services
             {
                 return ServiceResult.Fail("Klaida registruojant vartotoją: " + ex.Message);
             }
-
         }
 
         public async Task AtnaujintiAsync(Vartotojas auto)
         {
-            _db.Vartotojai.Update(auto);
-
-            await _db.SaveChangesAsync();
+            await using var db = _factory.CreateDbContext();
+            db.Vartotojai.Update(auto);
+            await db.SaveChangesAsync();
         }
 
         public async Task IstrintiAsync(int id)
         {
-            var auto = await _db.Vartotojai.FindAsync(id);
+            await using var db = _factory.CreateDbContext();
+            var auto = await db.Vartotojai.FindAsync(id);
             if (auto != null)
             {
-                _db.Vartotojai.Remove(auto);
-                await _db.SaveChangesAsync();
+                db.Vartotojai.Remove(auto);
+                await db.SaveChangesAsync();
             }
         }
 
-        public async Task<Vartotojas> AuthenticateAsync(string email, string password)
+        public async Task<Vartotojas?> AuthenticateAsync(string email, string password)
         {
-                var vartotojas = _db.Vartotojai.FirstOrDefault(c => c.ElPastas == email);
-                if(vartotojas == null)
-                {
-                    return null;
-                }
-                var hasher = new PasswordHasher<Vartotojas>();
-                var result = hasher.VerifyHashedPassword(vartotojas, vartotojas.SlaptazodisHash, password);
-                return result == PasswordVerificationResult.Success ? vartotojas : null;
+            await using var db = _factory.CreateDbContext();
+
+            var vartotojas = await db.Vartotojai
+                                     .FirstOrDefaultAsync(c => c.ElPastas == email);
+
+            if (vartotojas == null)
+                return null;
+
+            var hasher = new PasswordHasher<Vartotojas>();
+            var result = hasher.VerifyHashedPassword(
+                             vartotojas,
+                             vartotojas.SlaptazodisHash,
+                             password);
+
+            return result == PasswordVerificationResult.Success
+                 ? vartotojas
+                 : null;
         }
     }
 }

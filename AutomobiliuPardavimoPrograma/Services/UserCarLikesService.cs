@@ -18,6 +18,10 @@ namespace AutomobiliuPardavimoPrograma.Services
         {
             return await _db.UserPostLikes.ToListAsync();
         }
+        public async Task<List<UserPostLikes>> GautiVisusByIdAsync(int Id)
+        {
+            return await _db.UserPostLikes.Where(c => c.UserId == Id).ToListAsync();
+        }
         public async Task<ServiceResult> AddLike(int PostId, int UserId)
         {
             UserPostLikes newLike = new();
