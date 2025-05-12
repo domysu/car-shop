@@ -99,6 +99,8 @@
   } 
   private async Task registerUser()
   {
+
+    //TODO: FIX RERGISTER PASSWORD NULL ISSUE
     NaujasVartotojas.SlaptazodisHash = hasher.HashPassword(NaujasVartotojas, NaujasVartotojas.RawPassword);
     Console.WriteLine(NaujasVartotojas.SlaptazodisHash);
     var result = await UserService.PridetiAsync(NaujasVartotojas);

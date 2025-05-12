@@ -22,6 +22,10 @@ public class CarService
     {
         return await _db.Automobiliai.FindAsync(id);
     }
+    public async Task<List<Automobilis>> GautiVisusNaudotojoSkelbimus(int id)
+    {
+        return await _db.Automobiliai.Where(c => c.CreatedById == id).ToListAsync();
+    }
 
     public async Task PridetiAsync(Automobilis auto)
     {

@@ -26,7 +26,8 @@ public class Automobilis
 
   [Required(ErrorMessage = "Kuro tipas privalomas")]
   public string KuroTipas { get; set; }
-    [Required(ErrorMessage = "Mašinos nuotrauka yra privaloma")]
+   
+  [MinLength(1,ErrorMessage = "Mašinos nuotrauka yra privaloma")] 
   public List<string> Nuotraukos { get; set; } = new();
   [Required]
   public int CreatedById {get; set; }

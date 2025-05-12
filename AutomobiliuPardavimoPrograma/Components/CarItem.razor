@@ -49,8 +49,13 @@ else
         private bool HasLiked =>
         UserPostLikes.Any(x => x.PostId == Car.Id && x.UserId == CurrentUserId);
         private bool isLiked = false;
+   
+    
+
+    
     protected override async Task OnInitializedAsync()
     {
+
        isLiked = HasLiked;
        
 

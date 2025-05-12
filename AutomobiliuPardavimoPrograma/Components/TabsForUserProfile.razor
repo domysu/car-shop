@@ -1,0 +1,100 @@
+@using AutomobiliuPardavimoPrograma.Models
+@using AutomobiliuPardavimoPrograma.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject CarService CarService
+@inject UserService UserService
+@inject UserCarLikesService CarLikesService
+@inject AuthenticationStateProvider AuthProvider
+@rendermode InteractiveServer
+
+            <CardBody class="bg-slate-50 w-full">
+                <Tabs SelectedTab="@selectedTabName1" SelectedTabChanged="@OnSelectedTabChanged1">
+                    <Items>
+                        @tabItems
+                    </Items>
+                    <Content>
+                        @tabContent
+                    </Content>
+                </Tabs>
+            </CardBody>
+
+@code{
+
+    [Parameter]
+    public int Id {get;set;}
+    public bool canUserEditProfile = false;
+     private RenderFragment tabItems => __builder =>
+    {
+        <Tab Name="cars">Išsaugotos mašinos</Tab>
+       
+        <Tab Name="skelbimai">Skelbimai</Tab>
+        
+        @if(canUserEditProfile)
+        {
+        <Tab Name="nustatymai">Nustatymai</Tab>
+        }   
+    };
+    private RenderFragment tabContent => __builder =>
+    {
+        <TabPanel Name="cars">
+           <ProfileCarList car="userLikedCarsList" errorMessage="carsMessage"></ProfileCarList>
+        </TabPanel>
+        <TabPanel Name="skelbimai">
+            <ProfileCarList car="userPosts" errorMessage="carsMessage2"></ProfileCarList>
+        </TabPanel>
+        <TabPanel Name="nustatymai">
+            <Settings currentUser="currentUser"></Settings>
+        </TabPanel>
+    };
+   
+private string selectedTabName1 = "cars";
+private string carsMessage = "Naudotojas dar neišsaugojo jokiu skelbimų..";
+private string carsMessage2 = "Naudotojas dar nepaskelbė jokiu skelbimų..";
+
+
+       private void OnSelectedTabChanged1( string name )
+    {
+        selectedTabName1 = name;
+    }
+
+    private Vartotojas? currentUser { get; set; }
+    public List<Automobilis>? autoList = new();
+
+    public List<UserPostLikes>? userLikesList = new();
+    public List<Automobilis>? userLikedCarsList = new();
+    public List<Automobilis>? userPosts = new(); 
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser = await UserService.GautiPagalIdAsync(Id);
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if(user.FindFirst(ClaimTypes.NameIdentifier)?.Value == currentUser.Id.ToString())
+        {
+            canUserEditProfile = true;
+        }
+        else canUserEditProfile = false;
+        
+        userLikesList = await CarLikesService.GautiVisusByIdAsync(Id);
+        autoList = await CarService.GautiVisusAsync();
+    
+        userPosts = await CarService.GautiVisusNaudotojoSkelbimus(Id);
+    
+  
+        // 2) Extract the liked-car IDs
+        var likedIds = userLikesList
+        .Select(like => like.PostId)
+        .ToHashSet();
+
+        // 3) Filter in-memory and use ToList()
+        userLikedCarsList = autoList
+        .Where(car => likedIds.Contains(car.Id))
+        .ToList();
+
+
+
+
+
+    }
+}

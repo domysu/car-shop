@@ -117,6 +117,7 @@
     showErrorMessage = false;
     var claims = new List<Claim>
     {
+      new Claim(ClaimTypes.NameIdentifier, result.Id.ToString()),
       new Claim(ClaimTypes.Name, result.Vardas),
       new Claim(ClaimTypes.Role, result.YraAdmin ? "Admin" : "User"),
       

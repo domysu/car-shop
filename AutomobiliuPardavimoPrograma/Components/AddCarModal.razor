@@ -152,17 +152,18 @@
 
   private async Task HandleSubmit()
   {
+    Console.WriteLine("Trying to call handlevalidsubmit..");
     NaujasAutomobilis.CreatedById = CurrentUserId;
     await CarService.PridetiAsync(NaujasAutomobilis);
     SubmitStatus = "Item Added!";
-   
+    await HideModal();
   }
 
-  private void HandleInvalidSubmit(EditContext _) 
+  private async Task HandleInvalidSubmit(EditContext _) 
   {
+    Console.WriteLine("Trying to call handleinvalidsubmit..");
     SubmitStatus = "Something went wrong!";
-     Console.WriteLine(NaujasAutomobilis.Aprasymas);
-      Console.WriteLine(NaujasAutomobilis.Nuotraukos[0]);
+      return ;
    
   }
 

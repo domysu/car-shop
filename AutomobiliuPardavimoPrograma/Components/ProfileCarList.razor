@@ -1,0 +1,41 @@
+@using AutomobiliuPardavimoPrograma.Models
+
+<div class="col-start-4 col-span-6 bg-slate-50 p-2">
+            @if (car.Any())
+            {
+                <ul>
+                    @foreach (var car in car)
+                    {
+                        <div>
+                        <p> @car.Marke @car.Modelis (@car.Metai)</p>
+
+                        </div>
+                        <div class="flex py-1 border-b-2 mb-1">
+                            
+                            <img src="@car.Nuotraukos[0]" alt="CarImage" class="w-[128px] h-[128px] object-cover rounded-sm">
+                            <div class="px-2 space-y-1">
+                                <p>Pavarų dėžę: @car.PavaruDeze</p>
+                                <p>Kuro tipas: @car.KuroTipas</p>
+                                <p>Kaina: @car.Kaina.ToString("F0") $</p>
+                                <p>@car.Aprasymas</p>
+                            </div>
+                            
+                            
+                        </div>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Naudotojas dar neišsaugojo jokiu skelbimų..</p>
+            }
+
+        </div>
+@code {
+
+[Parameter]
+public List<Automobilis> car {get;set;}
+[Parameter]
+public string errorMessage {get;set;}
+
+}
