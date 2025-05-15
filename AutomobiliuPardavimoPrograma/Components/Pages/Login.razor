@@ -15,7 +15,7 @@
 
 
 
-<PageTitle>Login In</PageTitle>
+<PageTitle>Prisijungimas</PageTitle>
 
 <div class="min-h-screen flex items-center justify-center  px-4">
   <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
@@ -35,7 +35,7 @@
         @errorMessage
       </div>
     }
-    <h2 class="text-2xl font-bold mb-6 text-slate-700 text-center">Login</h2>
+    <h2 class="text-2xl font-bold mb-6 text-slate-700 text-center">Prisijungti</h2>
 
     <EditForm Model="LoginModel" OnValidSubmit="LogIn" FormName="LoginForm">
       <DataAnnotationsValidator />
@@ -44,26 +44,26 @@
 
 
       <div class="mb-4">
-        <label class="text-sm font-medium text-slate-700 mb-1" for="email">Email</label>
+        <label class="text-sm font-medium text-slate-700 mb-1" for="email">El. paštas</label>
         <InputText id="email" type="email" @bind-Value="LoginModel.Email"
           class="w-full px-4 py-2 border border-slate-300 rounded-md" />
       </div>
 
       <div class="mb-6">
-        <label class="text-sm font-medium text-slate-700 mb-1" for="password">Password</label>
+        <label class="text-sm font-medium text-slate-700 mb-1" for="password">Slaptažodis</label>
         <InputText id="password" type="password" @bind-Value="LoginModel.Password"
           class="w-full px-4 py-2 border border-slate-300 rounded-md" />
       </div>
 
       <button type="submit"
         class="w-full bg-amber-400 hover:bg-amber-500 text-white font-semibold py-2 rounded-md transition">
-        Sign In
+        Prisijungti
       </button>
     </EditForm>
 
     <p class="mt-4 text-sm text-center text-slate-500">
-      Don't have an account?
-      <a href="/register" class="text-amber-500 hover:underline">Register here</a>
+      Dar neturi paskyros?
+      <a href="/register" class="text-amber-500 hover:underline">Prisiregistruok čia!</a>
     </p>
   </div>
 </div>

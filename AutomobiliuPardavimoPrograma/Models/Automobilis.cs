@@ -28,7 +28,7 @@ public class Automobilis
   public string KuroTipas { get; set; }
    
   [MinLength(1,ErrorMessage = "Mašinos nuotrauka yra privaloma")] 
-  public List<string> Nuotraukos { get; set; } = new();
+  public List<string> Nuotraukos { get; set; } = [];
   [Required]
   public int CreatedById {get; set; }
 

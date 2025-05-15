@@ -118,10 +118,10 @@
       <ModalFooter class="col-span-3">
         <Button Color="Color.Secondary"
                 Clicked="@HideModal">
-          Close
+          Atšaukti
         </Button>
         <button type="submit" class="col-start-3 ml-2 px-4 py-2 bg-green-500 text-white rounded">
-      Save (native)
+      Patalpinti
     </button>
       </ModalFooter>
       
@@ -131,7 +131,7 @@
 </Modal>
 
 @code {
-    private string SubmitStatus = "Not yet submitted!";
+    private string SubmitStatus = "";
     private List<string> previews = new();
     private Modal modalRef;
     [Parameter]

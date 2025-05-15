@@ -1,0 +1,64 @@
+@page "/car/{Id:int}"
+@using AutomobiliuPardavimoPrograma.Models
+@using AutomobiliuPardavimoPrograma.Services
+
+@inject CarService CarService
+
+@if (Car == null || Car.Nuotraukos == null || Car.Nuotraukos.Count == 0)
+{
+    <h1> Loading.. </h1>
+}
+else
+{
+    <div class="rounded-md mt-2 justify-center px-2 w-[1200px]">
+        <div class="flex justify-end">
+
+        </div>
+        <img src="@Car.Nuotraukos[0]" alt="@Car.Marke" class="object-cover h-[500px] w-[1200px] rounded-md">
+        <div class="">
+            <h1 class="text-2xl font-bold mt-2">@Car.Marke @Car.Modelis @Car.Metai m.</h1>
+            <h1 class="text-4xl mt-4 font-semibold"> @Car.Kaina.ToString("F0") € </h1>
+
+        </div>
+        <div class="grid grid-cols-2 gap-4 text-2xl mt-4">
+            <div class="flex gap-2 items-center">
+                <img src="images/road.svg" alt="Rida" class="h-8 w-8">
+                <h1>Rida: @Car.Rida km</h1>
+            </div>
+
+            <div class="flex gap-2 items-center">
+                <img src="images/gearstick.svg" alt="Pavarų dežė" class="h-8 w-8">
+                <h1>Pavarų dėžė: @Car.PavaruDeze</h1>
+            </div>
+
+            <div class="flex gap-2 items-center">
+                <img src="images/fuel.svg" alt="Kuro tipas" class="h-8 w-8">
+                <h1>Kuro tipas: @Car.KuroTipas</h1>
+            </div>
+
+            <div class="flex gap-2 items-center">
+                <img src="images/calendar.svg" alt="Metai" class="h-8 w-8">
+                <h1>Metai: @Car.Metai</h1>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+    public Automobilis Car = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Car = await CarService.GautiPagalIdAsync(Id);
+        Console.WriteLine("Image URL: " + Car.Nuotraukos[0]);
+        StateHasChanged();
+
+
+    }
+
+
+}
