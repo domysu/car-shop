@@ -7,14 +7,14 @@ public class Vartotojas
 {
 
     public int Id { get; set; }
- 
+    [Required]
     public string Vardas { get; set; }
+    [Required]
     public string ElPastas { get; set; }
 
     public string SlaptazodisHash { get; set; }
     
-    [NotMapped]
-
+    [NotMapped][Required]
     public string RawPassword{get; set;}
     public bool YraAdmin { get; set; }
     public ICollection<UserPostLikes> UserPostLikes { get; set; }
