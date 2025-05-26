@@ -9,14 +9,14 @@
   <ModalContent Size="ModalSize.Fullscreen" Class="h-max">
     
     <ModalHeader class="ml-5">
-      <ModalTitle>Pridėti skelbimą</ModalTitle>
+      <ModalTitle>@(isEditing ? "Atnaujinti skelbimą" : "Pridėti skelbimą")</ModalTitle>
       <CloseButton />
     </ModalHeader>
     
     <EditForm Model="NaujasAutomobilis"
               OnValidSubmit="HandleSubmit"
               OnInvalidSubmit="HandleInvalidSubmit"
-              class="grid grid-cols-3 gap-3 ml-10">
+              class="grid grid-cols-4 gap-3 ml-10">
       
       <DataAnnotationsValidator />
 
@@ -95,21 +95,35 @@
       </div>
       
       <!-- Column 3: image + file -->
-      <Field Class="col-span-1 w-full h-80 rounded-md">
+      <Field Class="col-span-2 w-full h-80 rounded-md">
         @if (previews?.Any() == true)
-    {
+      {
     
       @foreach (var src in previews)
       {
-        <img src="@src" class="object-cover w-full h-40 rounded-md" />
+        <div class="relative w-40 flex group ">
+        <img src="@src" class="object-cover w-full h-40 rounded-md mb-2 " />
+        
+        <div class=" h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70 ">
+
+          <button>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+          </button>
+        </div>
+        <div class=" w-full absolute top-0 ">
+
+        </div>
+        
+        </div>
       }
-      }
-        <button class="relative bg-amber-300 px-3 py-2 mt-3">
-          Pridėti nuotraukas
-          <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
-                     OnChange="OnFilesChanged" />
-        </button>
+      
+    }
+
+    
       </Field>
+      
         <p class="col-span-3 text-sm text-blue-600">
         @SubmitStatus
         </p>
@@ -120,9 +134,12 @@
                 Clicked="@HideModal">
           Atšaukti
         </Button>
+        
         <button type="submit" class="col-start-3 ml-2 px-4 py-2 bg-green-500 text-white rounded">
-      Patalpinti
-    </button>
+        @(isEditing ? "Išsaugoti" : "Patalpinti")
+        </button>
+     
+        
       </ModalFooter>
       
     </EditForm>
@@ -136,15 +153,26 @@
     private Modal modalRef;
     [Parameter]
     public int CurrentUserId {get;set;}
-
   private Automobilis NaujasAutomobilis = new Automobilis{
     KuroTipas = "Benzinas",
     PavaruDeze = "Mechanine",
   };
-
+  
+  [Parameter]
+  public EventCallback<Automobilis> OnCarAdded {get;set;}
+  [Parameter]
+  public bool isEditing {get;set;}
+  [Parameter]
+  public Automobilis EditAuto {get;set;}
   public Task ShowModal()
   {
-    
+    Console.WriteLine("ShowModal Called");
+    if(isEditing)
+    {
+      NaujasAutomobilis = EditAuto;
+      NaujasAutomobilis.Nuotraukos = EditAuto.Nuotraukos.ToList();
+      previews = EditAuto.Nuotraukos.ToList();
+    }
     return modalRef.Show();
   }
 
@@ -155,8 +183,12 @@
     Console.WriteLine("Trying to call handlevalidsubmit..");
     NaujasAutomobilis.CreatedById = CurrentUserId;
     await CarService.PridetiAsync(NaujasAutomobilis);
+    await OnCarAdded.InvokeAsync(NaujasAutomobilis);
     SubmitStatus = "Item Added!";
+    previews.Clear();
     await HideModal();
+
+
   }
 
   private async Task HandleInvalidSubmit(EditContext _) 
@@ -169,8 +201,6 @@
 
    private async Task OnFilesChanged(InputFileChangeEventArgs e)
   {
-    // clear old
-    previews.Clear();
     
 
     // ensure folder
@@ -198,7 +228,7 @@
       var previewUrl = $"data:{file.ContentType};base64,"
                        + Convert.ToBase64String(ms.ToArray());
       previews.Add(previewUrl);
-       StateHasChanged();
+  
       // store relative URL for later display / database
       NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
     }

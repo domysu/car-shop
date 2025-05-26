@@ -77,7 +77,7 @@
 <div class="mb-2 text-white">
 
     <button class="bg-amber-500 p-2 rounded-md" @onclick="() => modalRef.ShowModal()"> Įkelti skelbimą </button>
-    <AddCarModal @ref="modalRef" CurrentUserId="currentUserId" />
+    <AddCarModal @ref="modalRef" CurrentUserId="currentUserId" OnCarAdded="HandleNewCar" />
 </div>
 
 @if (filteredAutomobiliai == null)
@@ -93,7 +93,7 @@ else
   <div class="gap-4">
     @foreach (var car in filteredAutomobiliai)
     {
-      <CarItem Car="car" CurrentUserId="currentUserId" UserPostLikes="laikai" />
+      <CarItem Car="car" CurrentUserId="currentUserId" UserPostLikes="laikai"  />
     }
   </div>
 }
@@ -120,7 +120,10 @@ else
     laikai = await UserCarLikesService.GautiVisusAsync();
     filteredAutomobiliai = automobiliai;
   }
-
+  private void HandleNewCar(Automobilis car)
+  {
+    automobiliai.Add(car);
+  }
   private void ApplyFilters()
   {
     if (automobiliai is null) return;
@@ -144,7 +147,7 @@ else
       query = query.Where(a => a.KuroTipas == filterKuroTipas);
 
     filteredAutomobiliai = query.ToList();
-    StateHasChanged();
+    
   }
 
   private void ResetFilters()
