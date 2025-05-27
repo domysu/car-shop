@@ -19,6 +19,7 @@
               class="grid grid-cols-4 gap-3 ml-10">
       
       <DataAnnotationsValidator />
+   
 
       
       <!-- Column 1 -->
@@ -99,37 +100,38 @@
         @if (previews?.Any() == true)
       {
     
-      @foreach (var src in previews)
-      {
-        <div class="relative w-40 flex group ">
-        <img src="@src" class="object-cover w-full h-40 rounded-md mb-2 " />
-        
-        <div class=" h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70 ">
-
-          <button>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      <div class="grid grid-cols-2 gap-2 mt-2">
+  @for (int i = 0; i < previews.Count; i++)
+  {
+    var index = i;
+    <div class="relative w-80 flex group">
+      <img src="@previews[index]" class="object-cover w-full h-40 rounded-md mb-2" />
+      <div class="h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70">
+        <button type="button" @onclick="()=>HandlePictureRemoval(index)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
-          </button>
-        </div>
-        <div class=" w-full absolute top-0 ">
-
-        </div>
-        
-        </div>
-      }
+        </button>
+      </div>
+    </div>
+  }
+</div>
       
     }
 
-    
+        <button class="relative bg-amber-300 px-3 py-2 mt-3 text-white">
+          Pridėti nuotraukas
+          <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
+                     OnChange="OnFilesChanged" />
+         
+        </button>
       </Field>
-      
         <p class="col-span-3 text-sm text-blue-600">
         @SubmitStatus
         </p>
       
       <!-- Footer -->
-      <ModalFooter class="col-span-3">
+      <ModalFooter class="col-span-3 border-none">
         <Button Color="Color.Secondary"
                 Clicked="@HideModal">
           Atšaukti
@@ -153,9 +155,12 @@
     private Modal modalRef;
     [Parameter]
     public int CurrentUserId {get;set;}
+    private List<(string FileName, byte[] FileData, string ContentType)> TempFiles = new();
+
   private Automobilis NaujasAutomobilis = new Automobilis{
     KuroTipas = "Benzinas",
     PavaruDeze = "Mechanine",
+  
   };
   
   [Parameter]
@@ -180,11 +185,34 @@
 
   private async Task HandleSubmit()
   {
-    Console.WriteLine("Trying to call handlevalidsubmit..");
+   
+    var uploads = Path.Combine(_env.WebRootPath, "uploads");
+    Directory.CreateDirectory(uploads);
+
+    foreach (var (fileName, fileData, _) in TempFiles)
+    {
+        var filePath = Path.Combine(uploads, fileName);
+        await File.WriteAllBytesAsync(filePath, fileData);
+        
+    }
+    if(!isEditing)
+    {
     NaujasAutomobilis.CreatedById = CurrentUserId;
     await CarService.PridetiAsync(NaujasAutomobilis);
     await OnCarAdded.InvokeAsync(NaujasAutomobilis);
     SubmitStatus = "Item Added!";
+    }
+    if(isEditing)
+    {
+      await CarService.AtnaujintiAsync(NaujasAutomobilis);
+      SubmitStatus="Item renewed";
+    }
+    
+    
+
+  
+    
+    TempFiles.Clear();
     previews.Clear();
     await HideModal();
 
@@ -199,38 +227,55 @@
    
   }
 
-   private async Task OnFilesChanged(InputFileChangeEventArgs e)
+  private async Task HandlePictureRemoval(int index)
   {
-    
-
-    // ensure folder
-    var uploads = Path.Combine(_env.WebRootPath, "uploads");
-    Directory.CreateDirectory(uploads);
-
-    // limit per file, e.g. 2 MB
-    var maxBytes = 2 * 1024 * 1024;
-    
-
-    foreach (var file in e.GetMultipleFiles())
-    {
-      // generate unique name
-      var fileName = $"{Guid.NewGuid()}_{file.Name}";
-      var filePath = Path.Combine(uploads, fileName);
-
-      // read & save
-      await using var stream = file.OpenReadStream(maxBytes);
-      Console.WriteLine(stream);
-      using var ms = new MemoryStream();
-      await stream.CopyToAsync(ms);
-      await File.WriteAllBytesAsync(filePath, ms.ToArray());
-     
-      // build preview URL + model binding
-      var previewUrl = $"data:{file.ContentType};base64,"
-                       + Convert.ToBase64String(ms.ToArray());
-      previews.Add(previewUrl);
-  
-      // store relative URL for later display / database
-      NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
-    }
+    previews.RemoveAt(index);
+    if (index < TempFiles.Count)
+            TempFiles.RemoveAt(index);
   }
+
+  private async Task OnFilesChanged(InputFileChangeEventArgs e)
+{
+
+    const int maxFiles = 6;
+    const int maxBytes = 2 * 1024 * 1024;
+
+    var files = e.GetMultipleFiles();
+
+    foreach (var file in files)
+    {
+        if (TempFiles.Count >= maxFiles || previews.Count >= maxFiles)
+        {
+            SubmitStatus = "Maximum of 6 images allowed";
+            break;
+        }
+
+       
+
+        try
+        {
+            var fileName = $"{Guid.NewGuid()}_{file.Name}";
+            await using var stream = file.OpenReadStream(maxBytes);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var fileBytes = ms.ToArray();
+
+            var previewUrl = $"data:{file.ContentType};base64," + Convert.ToBase64String(fileBytes);
+            previews.Add(previewUrl);
+            TempFiles.Add((fileName, fileBytes, file.ContentType));
+            NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
+        }
+        catch (Exception ex)
+        {
+            SubmitStatus = $"Failed to process file '{file.Name}': {ex.Message}";
+            break;
+        }
+    }
+
+    // Clear status if no error
+    if (TempFiles.Count <= maxFiles)
+    {
+        SubmitStatus = "";
+    }
+}
 }
