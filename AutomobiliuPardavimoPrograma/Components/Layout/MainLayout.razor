@@ -10,15 +10,29 @@
 
 <div class="page">
     <main>
-        <div class="bg-gradient-to-b from-slate-100 via-slate-50 to-slate-200 p-4 flex items-center relative">
-            <a href="/cars" class="text-slate-500 cursor-pointer hover:underline">Skelbimai</a>
+        <div class="bg-gradient-to-b text-slate-500 from-slate-100 via-slate-50 to-slate-200 p-4 flex items-center relative">
+            
+                        
+            <a href="/cars" class=" flex gap-2 p-1 hover:bg-slate-300 px-2 cursor-pointer rounded-full"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                        
+                        Skelbimai
+            
+            </a>
             
 
             <AuthorizeView>
                 <Authorized>
                     <div class="absolute right-1 flex text-center">
                     <span class="text-green-700 p-2" > Labas, 
-                        <a href="@($"/user/{userId}")" class="hover:underline"><b> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value </b></a>
+                        <a href="@($"/user/{userId}")" class="hover:underline">
+                        
+                       
+
+                        <b> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value </b>
+                        
+                        </a>
                     </span>
 
                     <a class="text-red-500 p-2 hover:underline" href="/logout">Atsijungti</a>

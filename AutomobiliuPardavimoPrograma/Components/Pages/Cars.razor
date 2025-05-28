@@ -7,10 +7,11 @@
 @using Microsoft.EntityFrameworkCore
 @using System.Security.Claims
 @inject UserCarLikesService UserCarLikesService
+@using Microsoft.AspNetCore.Authorization
 @inject AuthenticationStateProvider AuthStateProvider
 @inject UserService UserService
 @inject CarService CarService
-
+@attribute [Authorize]
 
 <PageTitle>Cars</PageTitle>
 

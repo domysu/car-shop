@@ -4,175 +4,182 @@
 @inject CarService CarService
 @rendermode InteractiveServer
 @inject IWebHostEnvironment _env
+@inject NavigationManager NavigationManager
 
 <Modal class="" @ref="modalRef">
   <ModalContent Size="ModalSize.Fullscreen" Class="h-max">
-    
+
     <ModalHeader class="ml-5">
       <ModalTitle>@(isEditing ? "Atnaujinti skelbimą" : "Pridėti skelbimą")</ModalTitle>
       <CloseButton />
     </ModalHeader>
-    
-    <EditForm Model="NaujasAutomobilis"
-              OnValidSubmit="HandleSubmit"
-              OnInvalidSubmit="HandleInvalidSubmit"
-              class="grid grid-cols-4 gap-3 ml-10">
-      
-      <DataAnnotationsValidator />
-   
 
-      
+    <EditForm Model="NaujasAutomobilis" OnValidSubmit="HandleSubmit" OnInvalidSubmit="HandleInvalidSubmit"
+      class="grid grid-cols-4 gap-3 ml-10">
+
+      <DataAnnotationsValidator />
+
+
+
       <!-- Column 1 -->
       <div class="col-span-1">
         <Field Class="">
           <FieldLabel>Automobilio markė *</FieldLabel>
           <InputText @bind-Value="NaujasAutomobilis.Marke"
-                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
-                    Placeholder="Įveskite markę" />
-       
+            class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+            Placeholder="Įveskite markę" />
+
         </Field>
-        
+
         <Field>
           <FieldLabel>Automobilio modelis *</FieldLabel>
           <InputText @bind-Value="NaujasAutomobilis.Modelis"
-                    class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
-                    Placeholder="Įveskite modelį" />
-      
+            class="max-w-xs p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+            Placeholder="Įveskite modelį" />
+
         </Field>
-        
+
         <Field>
           <FieldLabel>Automobilio gaminimo metai *</FieldLabel>
           <InputNumber min="1885" max="2027" @bind-Value="NaujasAutomobilis.Metai"
-                    class="max-w-xs  text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
-                    Placeholder="Įveskite gaminimo metus" />
-        
+            class="max-w-xs  text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+            Placeholder="Įveskite gaminimo metus" />
+
         </Field>
-        
+
         <Field>
           <FieldLabel>Automobilio kaina (€) *</FieldLabel>
           <InputNumber min="0" @bind-Value="NaujasAutomobilis.Kaina"
-                    class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
-                    Placeholder="Įveskite kainą" />
-      
+            class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+            Placeholder="Įveskite kainą" />
+
         </Field>
       </div>
-      
+
       <!-- Column 2 -->
       <div class="col-span-1">
         <Field>
           <FieldLabel>Automobilio rida (km) *</FieldLabel>
           <InputNumber min="0" max="3000000" @bind-Value="NaujasAutomobilis.Rida"
-                    class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
-                    Placeholder="Įveskite ridą" />
+            class="max-w-xs text-black rounded-lg opacity-70 bg-slate-100 border-slate-400"
+            Placeholder="Įveskite ridą" />
         </Field>
-       
-        
+
+
         <Field>
           <FieldLabel>Automobilio kuro tipas *</FieldLabel>
-         <InputSelect class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1" @bind-Value="NaujasAutomobilis.KuroTipas">
-                <option value="Benzinas">Benzinas</option>
-                <option value="Dyzelis">Dyzelis</option>
-                <option value="Elektra">Elektra</option>
-                <option value="Hybridas">Hybridas</option>
-            </InputSelect>
-         
+          <InputSelect
+            class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+            @bind-Value="NaujasAutomobilis.KuroTipas">
+            <option value="Benzinas">Benzinas</option>
+            <option value="Dyzelis">Dyzelis</option>
+            <option value="Elektra">Elektra</option>
+            <option value="Hybridas">Hybridas</option>
+          </InputSelect>
+
         </Field>
         <Field>
           <FieldLabel>Automobilio pavarų dėžė *</FieldLabel>
-          <InputSelect class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1" @bind-Value="NaujasAutomobilis.PavaruDeze">
-                <option value="Mechanine">Mechanine</option>
-                <option value="Automatine">Automatine</option>
-            </InputSelect>
+          <InputSelect
+            class="max-w-[215px] w-full p-2.5 text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"
+            @bind-Value="NaujasAutomobilis.PavaruDeze">
+            <option value="Mechanine">Mechanine</option>
+            <option value="Automatine">Automatine</option>
+          </InputSelect>
         </Field>
-        
+
         <Field>
           <FieldLabel>Aprašymas</FieldLabel>
           <InputTextArea @bind-Value="NaujasAutomobilis.Aprasymas"
-                    class="max-w-xs w-full text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1"/>
+            class="max-w-xs w-full text-black rounded-lg opacity-70 bg-slate-100 border-slate-400 border-1" />
 
         </Field>
-     
-        
+
+
       </div>
-      
+
       <!-- Column 3: image + file -->
       <Field Class="col-span-2 w-full h-80 rounded-md">
         @if (previews?.Any() == true)
-      {
-    
-      <div class="grid grid-cols-2 gap-2 mt-2">
-  @for (int i = 0; i < previews.Count; i++)
-  {
-    var index = i;
-    <div class="relative w-80 flex group">
-      <img src="@previews[index]" class="object-cover w-full h-40 rounded-md mb-2" />
-      <div class="h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70">
-        <button type="button" @onclick="()=>HandlePictureRemoval(index)">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  }
-</div>
-      
-    }
+        {
+
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            @for (int i = 0; i < previews.Count; i++)
+            {
+              var index = i;
+              <div class="relative w-80 flex group">
+                <img src="@previews[index]" class="object-cover w-full h-40 rounded-md mb-2" />
+                <div
+                  class="h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70">
+                  <button type="button" @onclick="() => HandlePictureRemoval(index)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+        }
 
         <button class="relative bg-amber-300 px-3 py-2 mt-3 text-white">
           Pridėti nuotraukas
           <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
-                     OnChange="OnFilesChanged" />
-         
+            OnChange="OnFilesChanged" />
+
         </button>
       </Field>
-        <p class="col-span-3 text-sm text-blue-600">
+      <p class="col-span-3 text-sm text-blue-600">
         @SubmitStatus
-        </p>
-      
+      </p>
+
       <!-- Footer -->
       <ModalFooter class="col-span-3 border-none">
-        <Button Color="Color.Secondary"
-                Clicked="@HideModal">
+        <Button Color="Color.Secondary" Clicked="@HideModal">
           Atšaukti
         </Button>
-        
+
         <button type="submit" class="col-start-3 ml-2 px-4 py-2 bg-green-500 text-white rounded">
-        @(isEditing ? "Išsaugoti" : "Patalpinti")
+          @(isEditing ? "Išsaugoti" : "Patalpinti")
         </button>
-     
-        
+
+
       </ModalFooter>
-      
+
     </EditForm>
-    
+
   </ModalContent>
 </Modal>
 
 @code {
-    private string SubmitStatus = "";
-    private List<string> previews = new();
-    private Modal modalRef;
-    [Parameter]
-    public int CurrentUserId {get;set;}
-    private List<(string FileName, byte[] FileData, string ContentType)> TempFiles = new();
+  private string SubmitStatus = "";
+  private List<string> previews = new();
+  private Modal modalRef;
+  [Parameter]
+  public int CurrentUserId { get; set; }
+  private List<(string FileName, byte[] FileData, string ContentType)> TempFiles = new();
 
-  private Automobilis NaujasAutomobilis = new Automobilis{
+  private Automobilis NaujasAutomobilis = new Automobilis
+  {
     KuroTipas = "Benzinas",
     PavaruDeze = "Mechanine",
-  
+
   };
-  
+
   [Parameter]
-  public EventCallback<Automobilis> OnCarAdded {get;set;}
+  public EventCallback<Automobilis> OnCarAdded { get; set; }
   [Parameter]
-  public bool isEditing {get;set;}
+  public EventCallback<Automobilis> OnCarUpdated {get;set;}
   [Parameter]
-  public Automobilis EditAuto {get;set;}
+  public bool isEditing { get; set; }
+  [Parameter]
+  public Automobilis EditAuto { get; set; }
   public Task ShowModal()
   {
     Console.WriteLine("ShowModal Called");
-    if(isEditing)
+    if (isEditing)
     {
       NaujasAutomobilis = EditAuto;
       NaujasAutomobilis.Nuotraukos = EditAuto.Nuotraukos.ToList();
@@ -185,33 +192,36 @@
 
   private async Task HandleSubmit()
   {
-   
+
     var uploads = Path.Combine(_env.WebRootPath, "uploads");
     Directory.CreateDirectory(uploads);
 
     foreach (var (fileName, fileData, _) in TempFiles)
     {
-        var filePath = Path.Combine(uploads, fileName);
-        await File.WriteAllBytesAsync(filePath, fileData);
-        
+      var filePath = Path.Combine(uploads, fileName);
+      await File.WriteAllBytesAsync(filePath, fileData);
+
     }
-    if(!isEditing)
+    if (!isEditing)
     {
-    NaujasAutomobilis.CreatedById = CurrentUserId;
-    await CarService.PridetiAsync(NaujasAutomobilis);
-    await OnCarAdded.InvokeAsync(NaujasAutomobilis);
-    SubmitStatus = "Item Added!";
+      NaujasAutomobilis.CreatedById = CurrentUserId;
+      await CarService.PridetiAsync(NaujasAutomobilis);
+      await OnCarAdded.InvokeAsync(NaujasAutomobilis);
+      SubmitStatus = "Item Added!";
     }
-    if(isEditing)
+    if (isEditing)
     {
       await CarService.AtnaujintiAsync(NaujasAutomobilis);
-      SubmitStatus="Item renewed";
+      await OnCarUpdated.InvokeAsync(NaujasAutomobilis);
+      SubmitStatus = "Item renewed";
+      NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    
     }
-    
-    
 
-  
-    
+
+
+
+
     TempFiles.Clear();
     previews.Clear();
     await HideModal();
@@ -219,23 +229,25 @@
 
   }
 
-  private async Task HandleInvalidSubmit(EditContext _) 
+  private async Task HandleInvalidSubmit(EditContext _)
   {
     Console.WriteLine("Trying to call handleinvalidsubmit..");
     SubmitStatus = "Something went wrong!";
-      return ;
-   
+    return;
+
   }
 
   private async Task HandlePictureRemoval(int index)
   {
     previews.RemoveAt(index);
+    NaujasAutomobilis.Nuotraukos.RemoveAt(index);
     if (index < TempFiles.Count)
-            TempFiles.RemoveAt(index);
+      TempFiles.RemoveAt(index);
+
   }
 
   private async Task OnFilesChanged(InputFileChangeEventArgs e)
-{
+  {
 
     const int maxFiles = 6;
     const int maxBytes = 2 * 1024 * 1024;
@@ -244,38 +256,38 @@
 
     foreach (var file in files)
     {
-        if (TempFiles.Count >= maxFiles || previews.Count >= maxFiles)
-        {
-            SubmitStatus = "Maximum of 6 images allowed";
-            break;
-        }
+      if (TempFiles.Count >= maxFiles || previews.Count >= maxFiles)
+      {
+        SubmitStatus = "Maximum of 6 images allowed";
+        break;
+      }
 
-       
 
-        try
-        {
-            var fileName = $"{Guid.NewGuid()}_{file.Name}";
-            await using var stream = file.OpenReadStream(maxBytes);
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            var fileBytes = ms.ToArray();
 
-            var previewUrl = $"data:{file.ContentType};base64," + Convert.ToBase64String(fileBytes);
-            previews.Add(previewUrl);
-            TempFiles.Add((fileName, fileBytes, file.ContentType));
-            NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
-        }
-        catch (Exception ex)
-        {
-            SubmitStatus = $"Failed to process file '{file.Name}': {ex.Message}";
-            break;
-        }
+      try
+      {
+        var fileName = $"{Guid.NewGuid()}_{file.Name}";
+        await using var stream = file.OpenReadStream(maxBytes);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var fileBytes = ms.ToArray();
+
+        var previewUrl = $"data:{file.ContentType};base64," + Convert.ToBase64String(fileBytes);
+        previews.Add(previewUrl);
+        TempFiles.Add((fileName, fileBytes, file.ContentType));
+        NaujasAutomobilis.Nuotraukos.Add($"/uploads/{fileName}");
+      }
+      catch (Exception ex)
+      {
+        SubmitStatus = $"Failed to process file '{file.Name}': {ex.Message}";
+        break;
+      }
     }
 
     // Clear status if no error
     if (TempFiles.Count <= maxFiles)
     {
-        SubmitStatus = "";
+      SubmitStatus = "";
     }
-}
+  }
 }
