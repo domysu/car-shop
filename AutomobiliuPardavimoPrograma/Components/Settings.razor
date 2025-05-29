@@ -9,6 +9,10 @@
 }
 else
 {
+    @if(showErrorMessage)
+    {
+        <div class="text-red-500">@errorMessage</div>
+    }
     <EditForm Model="UserEditModel" OnSubmit="HandleEdit" FormName="EditUserForm">
         <DataAnnotationsValidator />
         <div class="flex flex-col w-[185px] space-y-2">
@@ -18,7 +22,7 @@ else
             <InputText type="email" placeholder="@currentUser.ElPastas" @bind-Value="UserEditModel.Email"
                 class="rounded-md border-slate-300 bg-slate-50"> </InputText>
             <InputText type="password" @bind-Value="UserEditModel.CurrentPassword" placeholder="Dabartinis slaptažodis"
-                class="rounded-md border-slate-300 bg-slate-50"> </InputText>
+                class="rounded-md border-slate-300 bg-slate-50" required> </InputText>
             <InputText type="password" @bind-Value="UserEditModel.Password" placeholder="Naujas slaptažodis"
                 class="rounded-md border-slate-300 bg-slate-50"> </InputText>
            
@@ -35,18 +39,72 @@ else
     public UserEditModel UserEditModel { get; set; } = new();
 
     [Parameter]
-    public Vartotojas currentUser {get;set;}
+    public Vartotojas? currentUser {get;set;}
+    [Parameter]
+    public Vartotojas? authenticatedUser{get;set;}
+    private string errorMessage = "";
+    private bool showErrorMessage = false;
     
-
-
+    private bool emailValid = true;
+    private string loginEmail = "";
     private async Task HandleEdit()
     {
-        // TODO: CHECK FOR AUTH USER ID TO CURRENT USER
+        
+        Console.WriteLine(currentUser.Vardas);
+        
+        
+        if(authenticatedUser.Id == currentUser.Id || authenticatedUser.YraAdmin)
+        {
+            
+          if (!string.IsNullOrWhiteSpace(UserEditModel.Name))
+                currentUser.Vardas = UserEditModel.Name;
+            else UserEditModel.Name = currentUser.Vardas;
 
-        currentUser.Vardas = UserEditModel.Name;
-        currentUser.ElPastas = UserEditModel.Email;
-         NavigationManager.NavigateTo("/logout", forceLoad:true); 
+            if (!string.IsNullOrWhiteSpace(UserEditModel.Email))
+                {
+                    emailValid = await UserService.CheckExistingEmail(UserEditModel.Email);
+                    Console.WriteLine(emailValid);
+                    Console.WriteLine(UserEditModel.Email);
+                    if(emailValid)
+                    {
+                        loginEmail = currentUser.ElPastas; // Kad tikrintu dar nepakeista el.pasta 
+                        currentUser.ElPastas = UserEditModel.Email;
+                        
+                    }
+                    
+                }
+            else UserEditModel.Email = currentUser.ElPastas;
+         if (!string.IsNullOrWhiteSpace(UserEditModel.CurrentPassword))
+            {
+             var result = await UserService.AuthenticateAsync(loginEmail, UserEditModel.CurrentPassword);
+            if(!emailValid)
+            {
+                    errorMessage = "Ivestas el.paštas jau egzistuoja! ";
+                    showErrorMessage = true;
+                    return;
+            }
+             if(result == null)
+             {
+                Console.WriteLine(currentUser.Vardas);
+                errorMessage = "Ivestas dabartinis slaptažodis yra neteisingas! ";
+                showErrorMessage = true;
+                return ; 
+             }
+             
         await UserService.AtnaujintiAsync(currentUser);
+        if(authenticatedUser.Id == currentUser.Id)
+        {
+            NavigationManager.NavigateTo("/logout", forceLoad:true); 
+        }
+        else
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+                
+            }
+     
+        }
+
        
 
     }

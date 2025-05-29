@@ -7,7 +7,7 @@
 @inject NavigationManager NavigationManager
 
 <Modal class="" @ref="modalRef">
-  <ModalContent Size="ModalSize.Fullscreen" Class="h-max">
+  <ModalContent Size="ModalSize.Fullscreen" class="overflow-hidden h-full">
 
     <ModalHeader class="ml-5">
       <ModalTitle>@(isEditing ? "Atnaujinti skelbimą" : "Pridėti skelbimą")</ModalTitle>
@@ -124,25 +124,27 @@
 
         }
 
-        <button class="relative bg-amber-300 px-3 py-2 mt-3 text-white">
-          Pridėti nuotraukas
-          <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
-            OnChange="OnFilesChanged" />
-
-        </button>
+      
       </Field>
       <p class="col-span-3 text-sm text-blue-600">
         @SubmitStatus
       </p>
 
       <!-- Footer -->
-      <ModalFooter class="col-span-3 border-none">
-        <Button Color="Color.Secondary" Clicked="@HideModal">
+      <ModalFooter class="col-span-3 border-none ml-0">
+        <Button Color="Color.Secondary " class=" !rounded" Clicked="@HideModal">
           Atšaukti
         </Button>
 
-        <button type="submit" class="col-start-3 ml-2 px-4 py-2 bg-green-500 text-white rounded">
+        <button type="submit" class="col-start-3 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
           @(isEditing ? "Išsaugoti" : "Patalpinti")
+        </button>
+
+          <button class="  relative rounded bg-amber-500 hover:bg-amber-600 px-4 py-2 text-white "> 
+          Pridėti nuotraukas
+          <InputFile multiple class="opacity-0 h-auto w-auto absolute right-0 bottom-0 top-0 left-0"
+            OnChange="OnFilesChanged" />
+
         </button>
 
 

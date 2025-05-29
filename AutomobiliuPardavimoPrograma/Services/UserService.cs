@@ -96,5 +96,16 @@ namespace AutomobiliuPardavimoPrograma.Services
                  ? vartotojas
                  : null;
         }
+        public async Task<bool> CheckExistingEmail(string email)
+        {
+            await using var db = _factory.CreateDbContext();
+            var validatingUser = await db.Vartotojai.FirstOrDefaultAsync(c => c.ElPastas == email);
+            if (validatingUser != null) 
+            {
+                return false; // User already exists, returning false;
+            }
+            return true;
+        }   
+
     }
 }

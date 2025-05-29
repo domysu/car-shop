@@ -57,7 +57,7 @@ Skelbimai</Tab>
             <ProfileCarList car="userPosts" errorMessage="carsMessage2"></ProfileCarList>
         </TabPanel>
         <TabPanel Name="nustatymai">
-            <Settings currentUser="currentUser"> </Settings>
+            <Settings currentUser="currentUser" authenticatedUser="authenticatedUser"> </Settings>
         </TabPanel>
     };
    
@@ -72,6 +72,7 @@ private string carsMessage2 = "Naudotojas dar nepaskelbė jokiu skelbimų..";
     }
 
     private Vartotojas? currentUser { get; set; }
+    private Vartotojas? authenticatedUser {get;set;}
     public List<Automobilis>? autoList = new();
 
     public List<UserPostLikes>? userLikesList = new();
@@ -83,7 +84,9 @@ private string carsMessage2 = "Naudotojas dar nepaskelbė jokiu skelbimų..";
         currentUser = await UserService.GautiPagalIdAsync(Id);
         var authState = await AuthProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        if(user.FindFirst(ClaimTypes.NameIdentifier)?.Value == currentUser.Id.ToString())
+        var username = user.Identity.Name;
+        authenticatedUser = await UserService.GautiPagalUserNameAsync(username);
+        if(user.FindFirst(ClaimTypes.NameIdentifier)?.Value == currentUser.Id.ToString() || authenticatedUser.YraAdmin)
         {
             canUserEditProfile = true;
         }
