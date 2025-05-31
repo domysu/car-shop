@@ -9,11 +9,11 @@ A web-based car sale project for school project
 ## Technologies Used
 
 - [.NET 8](https://dotnet.microsoft.com/)
-- Blazor Server
-- Entity Framework Core (with MySQL or SQLite)
+- Blazor
+- PostgreSQL
 - Tailwind CSS
 - C#
-- Razor Components
+
 
 ---
 
@@ -21,25 +21,13 @@ A web-based car sale project for school project
 
 These instructions will get your local development environment up and running.
 
-### 1. Clone the repository
+#### Clone the repository
 
 ```bash
 git clone https://github.com/domysu/car-shop.git
 ```
 
-###  2. Install dependencies (for Tailwind CSS)
 
-Make sure you have [Node.js](https://nodejs.org/) installed.
-
-```bash
-npm install
-```
-
----
-
-## Tailwind CSS
-
-### Watch for changes (during development)
 
 This command generates `site.css` from your custom Tailwind styles:
 
@@ -47,56 +35,27 @@ This command generates `site.css` from your custom Tailwind styles:
 npx tailwindcss -i ./wwwroot/css/input.css -o ./wwwroot/css/site.css --watch
 ```
 
----
 
-##  Database Setup
+#### Make sure your database is up and running
+**I used docker for my database** 
 
-Make sure you have database available (MySQL or SQLite).  
-Update the connection string in `Program.cs` accordingly.
-
-### Using MySQL (example):
-
-```csharp
-options.UseMySql(
-  "server=localhost;port=3306;database=dbname;user=root;password=yourpassword",
-  ServerVersion.AutoDetect(...)
-);
+in `appsettings.json` add this
 ```
-or in `appsettings.json` add this
-```csharp
-
   "ConnectionStrings": {
     "DefaultConnection": "server=localhost;port=3306;database=dbname;user=username;password=password"
 
   }
 ```
-then in `Program.cs`
-```csharp
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
-    builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    ));
-```
 
-### Using SQLite (quick start):
-
-```csharp
-options.UseSqlite("Data Source=automobiliai.db");
-```
-
-### Apply migrations:
+#### Apply migrations
 
 ```bash
 dotnet ef database update
 ```
 
----
 
-##  Run the application
+#### Run the application
 
 ```bash
 dotnet run
@@ -105,27 +64,15 @@ dotnet run
 
 
 
-## .gitignore Tips
-
-Make sure the following are ignored:
-
-```
-node_modules/
-bin/
-obj/
-*.db
-*.log
-wwwroot/css/site.css
-```
 
 ---
 
-## License
+## Demo
 
-MIT
+Currently live demo is not available
+** Here some pics of the project **
+![photo1](https://github.com/user-attachments/assets/eb855279-76a6-49f9-84d3-1dcefbf9f707)
 
----
+![photo2](https://github.com/user-attachments/assets/cb03aa44-a2ed-4010-a072-6d0a7e87c2a4)
 
-##  Final Note
 
-Built with 💻 and ☕ 
