@@ -1,6 +1,6 @@
 # Car sale project
 
-Live version here: https://autogidas.fly.dev
+
 
 A web-based car sale project for school project
 
