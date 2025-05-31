@@ -28,4 +28,4 @@ primary_region = 'waw'
 
 [[mounts]]
 source = "uploads_vol"
-destination = "/wwwroot/uploads"
+destination = "/app/wwwroot/uploads"
