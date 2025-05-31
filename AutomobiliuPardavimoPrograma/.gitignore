@@ -10,6 +10,8 @@
 .vs/
 **/.DS_Store
 **/node_modules/
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
 
 
 # Ignore secrets and environment files

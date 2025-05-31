@@ -6,8 +6,8 @@
 @inject IWebHostEnvironment _env
 @inject NavigationManager NavigationManager
 
-<Modal class="" @ref="modalRef">
-  <ModalContent Size="ModalSize.Fullscreen" class="overflow-hidden h-full">
+<Modal class="h-full overflow-auto" @ref="modalRef">
+  <ModalContent Size="ModalSize.Fullscreen" class="h-full overflow-auto">
 
     <ModalHeader class="ml-5">
       <ModalTitle>@(isEditing ? "Atnaujinti skelbimą" : "Pridėti skelbimą")</ModalTitle>
@@ -15,14 +15,14 @@
     </ModalHeader>
 
     <EditForm Model="NaujasAutomobilis" OnValidSubmit="HandleSubmit" OnInvalidSubmit="HandleInvalidSubmit"
-      class="grid grid-cols-4 gap-3 ml-10">
+      class="grid lg:grid-cols-4 grid-cols-1 sm:grid-cols-4 gap-3 ml-10">
 
       <DataAnnotationsValidator />
 
 
-
+     
       <!-- Column 1 -->
-      <div class="col-span-1">
+      <div class="col-span-3 lg:col-span-1">
         <Field Class="">
           <FieldLabel>Automobilio markė *</FieldLabel>
           <InputText @bind-Value="NaujasAutomobilis.Marke"
@@ -57,7 +57,7 @@
       </div>
 
       <!-- Column 2 -->
-      <div class="col-span-1">
+      <div class="lg:col-span-1 col-span-3">
         <Field>
           <FieldLabel>Automobilio rida (km) *</FieldLabel>
           <InputNumber min="0" max="3000000" @bind-Value="NaujasAutomobilis.Rida"
@@ -98,17 +98,18 @@
 
       </div>
 
+
       <!-- Column 3: image + file -->
-      <Field Class="col-span-2 w-full h-80 rounded-md">
+      <Field Class="w-full h-20 col-span-3 lg:h-80 rounded-md">
         @if (previews?.Any() == true)
         {
 
-          <div class="grid grid-cols-2 gap-2 mt-2">
+          <div class=" gap-2 mt-2 lg:grid lg:grid-col-3">
             @for (int i = 0; i < previews.Count; i++)
             {
               var index = i;
-              <div class="relative w-80 flex group">
-                <img src="@previews[index]" class="object-cover w-full h-40 rounded-md mb-2" />
+              <div class="relative lg:col-span-1 w-20 lg:w-80 flex group">
+                <img src="@previews[index]" class="object-cover w-full h-20 lg:h-40 rounded-md mb-2" />
                 <div
                   class="h-6 absolute right-0 top-0 justify-items-end rounded-md rounded-b-none w-full text-end opacity-0 bg-slate-200 group-hover:opacity-70">
                   <button type="button" @onclick="() => HandlePictureRemoval(index)">

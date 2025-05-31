@@ -1,7 +1,7 @@
 using AutomobiliuPardavimoPrograma.Services;
 using AutomobiliuPardavimoPrograma.Models;
 using Microsoft.EntityFrameworkCore;
-using AutomobiliuPardavimoPrograma.Migrations;
+
 
 namespace AutomobiliuPardavimoPrograma.Services
 {
