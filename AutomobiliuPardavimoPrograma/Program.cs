@@ -38,24 +38,27 @@ if (env == "Development")
 else
 {
     // In production on Fly
+    
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL")
                       ?? throw new InvalidOperationException("DATABASE_URL is not set");
 
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':', 2);
-var npgsqlBuilder = new NpgsqlConnectionStringBuilder
-{
-    Host                   = uri.Host,
-    Port                   = (int)uri.Port,
-    Username               = userInfo[0],
-    Password               = userInfo[1],
-    Database               = uri.AbsolutePath.TrimStart('/'),
-    SslMode                = SslMode.Require,
-    TrustServerCertificate = true,
-    Pooling                = true,
-    MinPoolSize            = 1,    // <— use MinPoolSize
-    MaxPoolSize            = 20    // <— use MaxPoolSize
-};
+    var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = (int)uri.Port,
+        Username = userInfo[0],
+        Password = userInfo[1],
+        Database = uri.AbsolutePath.TrimStart('/'),
+        SslMode = SslMode.Disable,
+        TrustServerCertificate = true,
+        Pooling = true,
+        MinPoolSize = 1,    // <— use MinPoolSize
+        MaxPoolSize = 20    // <— use MaxPoolSize
+    };
+var finalCs = npgsqlBuilder.ConnectionString;
+
     builder.Services.AddDbContextFactory<AppDbContext>(opts =>
         opts.UseNpgsql(npgsqlBuilder.ConnectionString));
 }
@@ -77,6 +80,12 @@ builder.Services.AddScoped<UserCarLikesService>();
 
 
 var app = builder.Build();
+
+using(var scope = app.Services.CreateScope())
+{
+  var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+  ctx.Database.Migrate();
+}
 
 if (!app.Environment.IsDevelopment())
 {

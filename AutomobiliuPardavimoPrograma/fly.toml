@@ -12,6 +12,7 @@ primary_region = 'waw'
 [env]
   PORT = '8080'
 
+
 [http_service]
   internal_port = 8080
   force_https = true
@@ -24,3 +25,7 @@ primary_region = 'waw'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[[mounts]]
+source = "uploads_vol"
+destination = "/wwwroot/uploads"
