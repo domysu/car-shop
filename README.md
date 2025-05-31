@@ -70,7 +70,9 @@ dotnet run
 ## Demo
 
 Currently live demo is not available
-** Here some pics of the project **
+
+**Here some pics of the project**
+
 ![photo1](https://github.com/user-attachments/assets/eb855279-76a6-49f9-84d3-1dcefbf9f707)
 
 ![photo2](https://github.com/user-attachments/assets/cb03aa44-a2ed-4010-a072-6d0a7e87c2a4)
