@@ -24,10 +24,10 @@ else
             <InputText type="password" @bind-Value="UserEditModel.CurrentPassword" placeholder="Dabartinis slaptažodis"
                 class="rounded-md border-slate-300 bg-slate-50" required> </InputText>
             <InputText type="password" @bind-Value="UserEditModel.Password" placeholder="Naujas slaptažodis"
-                class="rounded-md border-slate-300 bg-slate-50"> </InputText>
+                class="rounded-md border-slate-300 bg-slate-50"> </InputText> 
            
 
-            <button class="p-2 bg-amber-300 text-black hover:bg-amber-400 rounded-sm" type="submit"> Submit </button>
+            <button class="p-2 bg-amber-400 text-slate-50 hover:bg-amber-500 rounded-sm" type="submit"> Pateikti </button>
 
         </div>
     </EditForm>
@@ -76,7 +76,11 @@ else
             else UserEditModel.Email = currentUser.ElPastas;
          if (!string.IsNullOrWhiteSpace(UserEditModel.CurrentPassword))
             {
-             var result = await UserService.AuthenticateAsync(loginEmail, UserEditModel.CurrentPassword);
+            var email = string.IsNullOrWhiteSpace(loginEmail) ? currentUser.ElPastas : loginEmail;
+            var result = await UserService.AuthenticateAsync(email, UserEditModel.CurrentPassword);
+            
+            
+             Console.WriteLine(loginEmail);
             if(!emailValid)
             {
                     errorMessage = "Ivestas el.paštas jau egzistuoja! ";

@@ -18,4 +18,4 @@ EXPOSE 8080
 
 # Run your app
 ENTRYPOINT ["dotnet", "AutomobiliuPardavimoPrograma.dll"]
->>>>>>> origin/main
+
